@@ -8,8 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		A43A7E961F48C1E1001187D8 /* PresidentEngine.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A43A7E8C1F48C1E1001187D8 /* PresidentEngine.framework */; };
-		A43A7E9B1F48C1E1001187D8 /* PresidentEngineTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A43A7E9A1F48C1E1001187D8 /* PresidentEngineTests.swift */; };
-		A43A7E9D1F48C1E1001187D8 /* PresidentEngine.h in Headers */ = {isa = PBXBuildFile; fileRef = A43A7E8F1F48C1E1001187D8 /* PresidentEngine.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		A43A7EA71F48C212001187D8 /* TrickIteratorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A43A7EA61F48C212001187D8 /* TrickIteratorTests.swift */; };
+		A43A7EA91F48C36E001187D8 /* Game.swift in Sources */ = {isa = PBXBuildFile; fileRef = A43A7EA81F48C36E001187D8 /* Game.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -24,11 +24,11 @@
 
 /* Begin PBXFileReference section */
 		A43A7E8C1F48C1E1001187D8 /* PresidentEngine.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = PresidentEngine.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		A43A7E8F1F48C1E1001187D8 /* PresidentEngine.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PresidentEngine.h; sourceTree = "<group>"; };
 		A43A7E901F48C1E1001187D8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		A43A7E951F48C1E1001187D8 /* PresidentEngineTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PresidentEngineTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		A43A7E9A1F48C1E1001187D8 /* PresidentEngineTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PresidentEngineTests.swift; sourceTree = "<group>"; };
 		A43A7E9C1F48C1E1001187D8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		A43A7EA61F48C212001187D8 /* TrickIteratorTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TrickIteratorTests.swift; sourceTree = "<group>"; };
+		A43A7EA81F48C36E001187D8 /* Game.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Game.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -71,8 +71,8 @@
 		A43A7E8E1F48C1E1001187D8 /* PresidentEngine */ = {
 			isa = PBXGroup;
 			children = (
-				A43A7E8F1F48C1E1001187D8 /* PresidentEngine.h */,
 				A43A7E901F48C1E1001187D8 /* Info.plist */,
+				A43A7EA81F48C36E001187D8 /* Game.swift */,
 			);
 			path = PresidentEngine;
 			sourceTree = "<group>";
@@ -80,8 +80,8 @@
 		A43A7E991F48C1E1001187D8 /* PresidentEngineTests */ = {
 			isa = PBXGroup;
 			children = (
-				A43A7E9A1F48C1E1001187D8 /* PresidentEngineTests.swift */,
 				A43A7E9C1F48C1E1001187D8 /* Info.plist */,
+				A43A7EA61F48C212001187D8 /* TrickIteratorTests.swift */,
 			);
 			path = PresidentEngineTests;
 			sourceTree = "<group>";
@@ -93,7 +93,6 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A43A7E9D1F48C1E1001187D8 /* PresidentEngine.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -148,10 +147,12 @@
 				TargetAttributes = {
 					A43A7E8B1F48C1E1001187D8 = {
 						CreatedOnToolsVersion = 8.3.3;
+						LastSwiftMigration = 0830;
 						ProvisioningStyle = Automatic;
 					};
 					A43A7E941F48C1E1001187D8 = {
 						CreatedOnToolsVersion = 8.3.3;
+						LastSwiftMigration = 0830;
 						ProvisioningStyle = Automatic;
 					};
 				};
@@ -196,6 +197,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A43A7EA91F48C36E001187D8 /* Game.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -203,7 +205,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A43A7E9B1F48C1E1001187D8 /* PresidentEngineTests.swift in Sources */,
+				A43A7EA71F48C212001187D8 /* TrickIteratorTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -319,6 +321,7 @@
 		A43A7EA11F48C1E1001187D8 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "";
 				COMBINE_HIDPI_IMAGES = YES;
 				DEFINES_MODULE = YES;
@@ -332,6 +335,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.danielcarlosce.PresidentEngine;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 3.0;
 			};
 			name = Debug;
@@ -339,6 +343,7 @@
 		A43A7EA21F48C1E1001187D8 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "";
 				COMBINE_HIDPI_IMAGES = YES;
 				DEFINES_MODULE = YES;
@@ -359,11 +364,14 @@
 		A43A7EA41F48C1E1001187D8 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CLANG_ENABLE_MODULES = YES;
 				COMBINE_HIDPI_IMAGES = YES;
 				INFOPLIST_FILE = PresidentEngineTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.danielcarlosce.PresidentEngineTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 3.0;
 			};
 			name = Debug;
@@ -371,6 +379,8 @@
 		A43A7EA51F48C1E1001187D8 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CLANG_ENABLE_MODULES = YES;
 				COMBINE_HIDPI_IMAGES = YES;
 				INFOPLIST_FILE = PresidentEngineTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
@@ -399,6 +409,7 @@
 				A43A7EA21F48C1E1001187D8 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		A43A7EA31F48C1E1001187D8 /* Build configuration list for PBXNativeTarget "PresidentEngineTests" */ = {
 			isa = XCConfigurationList;
@@ -407,6 +418,7 @@
 				A43A7EA51F48C1E1001187D8 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
