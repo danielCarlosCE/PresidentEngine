@@ -8,6 +8,7 @@
 
 import Foundation
 
+typealias Play = [Card]
 
 struct Card {
     let rank: Rank
@@ -19,7 +20,6 @@ struct Card {
 }
 
 extension Card: Comparable {
-    
     var value: Int {
         switch self.rank {
         case .aces:
@@ -42,11 +42,10 @@ extension Card: Comparable {
 
 
 protocol PlayOrderer {
-    var nextPlay: [Card]? {get}
+    var nextPlay: Play? {get}
 }
 
 class TrickIterator {
-    typealias Play = [Card]
     private let playOrderer: PlayOrderer
     private var currentPlay: Play?
     
@@ -65,43 +64,47 @@ class TrickIterator {
     }
     
     private func validate(_ nextPlay: Play) throws {
+        let rulesValidator = RulesValidator()
         
-        try validateHasCardsSameRank(play: nextPlay)
+        try rulesValidator.validatePlayHasOnlyOneRank(play: nextPlay)
         
         if let currentPlay = currentPlay  {
-            try validate(nextPlay: nextPlay, whenCurrentPlay: currentPlay)
+            try rulesValidator.validatePlayHasRightNumberCards(play: nextPlay, asCurrentPlay: currentPlay)
+            try rulesValidator.validatePlayHasGreaterRank(play: nextPlay, thanCurrentPlay: currentPlay)
         }
 
     }
     
-    private func validate(nextPlay: Play, whenCurrentPlay currentPlay: Play) throws {
-        
-        let hasGreatRank = nextPlay.flatMap { card in currentPlay.map { card > $0 }  }.reduce (true) {$0 && $1}
-        guard hasGreatRank else {
-            throw Error.lowerRank
-        }
-        
-        let hasSameNumberCards = (nextPlay.count == currentPlay.count)
-        
-        guard hasSameNumberCards else {
-            throw Error.invalidNumberCards
-        }
-    }
-    
-    private func validateHasCardsSameRank(play: Play) throws {
-        if let firstRank = play.first {
-            for rank in play {
-                guard firstRank == rank else {
-                    throw Error.cardsDifferentRanks
+    private class RulesValidator {
+        func validatePlayHasOnlyOneRank(play: Play) throws {
+            if let firstRank = play.first {
+                for rank in play {
+                    guard rank == firstRank else {
+                        throw Error.cardsDifferentRanks
+                    }
                 }
+            }
+        }
+        
+        func validatePlayHasGreaterRank(play: Play, thanCurrentPlay currentPlay: Play) throws {
+            let hasGreatRank = play.flatMap { card in currentPlay.map { card > $0 }  }.reduce (true) {$0 && $1}
+            guard hasGreatRank else {
+                throw Error.lowerRank
+            }
+        }
+        
+        func validatePlayHasRightNumberCards(play: Play, asCurrentPlay currentPlay: Play) throws {
+            let hasSameNumberCards = (play.count == currentPlay.count)
+            guard hasSameNumberCards else {
+                throw Error.invalidNumberCards
             }
         }
     }
     
-    enum Error: Swift.Error {
+    enum Error: Swift.Error {    
         case lowerRank
         case invalidNumberCards
         case cardsDifferentRanks
     }
-    
 }
+
