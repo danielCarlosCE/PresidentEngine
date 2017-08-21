@@ -49,6 +49,15 @@ class TrickIteratorTests: XCTestCase {
         XCTAssertEqual(result!, ["8","8"])
     }
     
+    func test_startTrick_considersTwoAcesGreatestRanks() {
+        var result: Play?
+        let sut = makeSut(forPlays: [["3"],["4"],["5"],["6"],["7"],["8"],["9"],["10"],["J"],["Q"],["K"],["A"],["2"]])
+        
+        try! sut.startTrick { result = $0 }
+        
+        XCTAssertEqual(result!, ["2"])
+    }
+    
     func test_startTrick_withLowerRankPlay_throwsError() {
         let sut = makeSut(forPlays: [["6"], ["4"]])
         
@@ -66,7 +75,6 @@ class TrickIteratorTests: XCTestCase {
         
         XCTAssertThrows(try sut.startTrick {_ in }, specificError: TrickIterator.Error.cardsDifferentRanks)
     }
-
     
     //MARK: private
     

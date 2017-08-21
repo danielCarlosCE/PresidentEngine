@@ -19,12 +19,24 @@ struct Card {
 }
 
 extension Card: Comparable {
+    
+    var value: Int {
+        switch self.rank {
+        case .aces:
+            return 14
+        case .two:
+            return 15
+        default:
+            return self.rank.rawValue
+        }
+    }
+    
     public static func <(lhs: Card, rhs: Card) -> Bool {
-        return lhs.rank.rawValue < rhs.rank.rawValue
+        return lhs.value < rhs.value
     }
     
     public static func ==(lhs: Card, rhs: Card) -> Bool {
-        return lhs.rank.rawValue == rhs.rank.rawValue
+        return lhs.value == rhs.value
     }
 }
 
