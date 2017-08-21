@@ -9,11 +9,11 @@
 import Foundation
 
 protocol PlayOrderer {
-    var nextPlay: String? {get}
+    var nextPlay: [String]? {get}
 }
 
 class TrickIterator {
-    typealias Play = String
+    typealias Play = [String]
     private let playOrderer: PlayOrderer
     private var currentPlay: Play?
     
@@ -42,11 +42,13 @@ class TrickIterator {
     }
     
     private func validate(nextPlay: Play, whenCurrentPlay currentPlay: Play) throws {
-        guard nextPlay > currentPlay else {
+        
+        let hasGreatRank = nextPlay.flatMap { card in currentPlay.map { card > $0 }  }.reduce (true) {$0 && $1}
+        guard hasGreatRank else {
             throw Error.lowerValue
         }
         
-        let hasSameNumberCards = (nextPlay.components(separatedBy: ",").count == currentPlay.components(separatedBy: ",").count)
+        let hasSameNumberCards = (nextPlay.count == currentPlay.count)
         
         guard hasSameNumberCards else {
             throw Error.invalidNumberCards
@@ -54,8 +56,7 @@ class TrickIterator {
     }
     
     private func validateHasCardsSameValue(play: Play) throws {
-        let cards = play.components(separatedBy: ",")
-        let values = cards.map {
+        let values = play.map {
             $0.replacingOccurrences(of: "♣︎", with: "")
                 .replacingOccurrences(of: "♠︎", with: "")
                 .replacingOccurrences(of: "♥︎", with: "")
