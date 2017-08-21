@@ -8,12 +8,33 @@
 
 import Foundation
 
+
+struct Card {
+    let rank: Rank
+    enum Rank: Int {
+        case aces = 1
+        case two, three, four, five, six, seven, eight, nine, ten
+        case jack, queen, king
+    }
+}
+
+extension Card: Comparable {
+    public static func <(lhs: Card, rhs: Card) -> Bool {
+        return lhs.rank.rawValue < rhs.rank.rawValue
+    }
+    
+    public static func ==(lhs: Card, rhs: Card) -> Bool {
+        return lhs.rank.rawValue == rhs.rank.rawValue
+    }
+}
+
+
 protocol PlayOrderer {
-    var nextPlay: [String]? {get}
+    var nextPlay: [Card]? {get}
 }
 
 class TrickIterator {
-    typealias Play = [String]
+    typealias Play = [Card]
     private let playOrderer: PlayOrderer
     private var currentPlay: Play?
     
