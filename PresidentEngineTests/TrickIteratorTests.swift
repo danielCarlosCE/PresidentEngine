@@ -13,20 +13,20 @@ class TrickIteratorTests: XCTestCase {
     
     func test_startTrick_withOnePlay_returnsResult() {
         var result: [String]?
-        let sut = makeSut(forPlays: [["4♣︎"]])
+        let sut = makeSut(forPlays: [["4"]])
         
         try! sut.startTrick { result = $0 }
         
-        XCTAssertEqual(result!, ["4♣︎"])
+        XCTAssertEqual(result!, ["4"])
     }
     
     func test_startTrick_withTwoPlays_reachesLastPlay() {
         var result: [String]?
-        let sut = makeSut(forPlays: [["3♣︎"], ["4♣︎"]])
+        let sut = makeSut(forPlays: [["3"], ["4"]])
         
         try! sut.startTrick { result = $0 }
         
-        XCTAssertEqual(result!, ["4♣︎"])
+        XCTAssertEqual(result!, ["4"])
     }
     
     func test_startTrick_withoutPlays_returnsNoPlay() {
@@ -40,29 +40,29 @@ class TrickIteratorTests: XCTestCase {
     
     func test_startTrick_withSetCardsPlays_returnsResult() {
         var result: [String]?
-        let sut = makeSut(forPlays: [["4♣︎","4♥︎"], ["8♣︎","8♣︎"]])
+        let sut = makeSut(forPlays: [["4","4"], ["8","8"]])
         
         try! sut.startTrick { result = $0 }
         
-        XCTAssertEqual(result!, ["8♣︎","8♣︎"])
+        XCTAssertEqual(result!, ["8","8"])
     }
     
-    func test_startTrick_withLowerValuePlay_throwsError() {
-        let sut = makeSut(forPlays: [["6♣︎"], ["4♣︎"]])
+    func test_startTrick_withLowerRankPlay_throwsError() {
+        let sut = makeSut(forPlays: [["6"], ["4"]])
         
-        XCTAssertThrows(try sut.startTrick {_ in }, specificError: TrickIterator.Error.lowerValue)
+        XCTAssertThrows(try sut.startTrick {_ in }, specificError: TrickIterator.Error.lowerRank)
     }
     
     func test_startTrick_withWrongNumberCardsPlay_throwsError() {
-        let sut = makeSut(forPlays: [["6♣︎"], ["8♣︎","8♦︎"]])
+        let sut = makeSut(forPlays: [["6"], ["8","8"]])
         
         XCTAssertThrows(try sut.startTrick {_ in }, specificError: TrickIterator.Error.invalidNumberCards)
     }
     
-    func test_startTrick_withCardsDifferentValuesPlay_throwsError() {
-        let sut = makeSut(forPlays: [["6♣︎", "7♣︎"]])
+    func test_startTrick_withCardsDifferentRanksPlay_throwsError() {
+        let sut = makeSut(forPlays: [["6", "7"]])
         
-        XCTAssertThrows(try sut.startTrick {_ in }, specificError: TrickIterator.Error.cardsDifferentValues)
+        XCTAssertThrows(try sut.startTrick {_ in }, specificError: TrickIterator.Error.cardsDifferentRanks)
     }
 
     

@@ -33,7 +33,7 @@ class TrickIterator {
     
     private func validate(_ nextPlay: Play) throws {
         
-        try validateHasCardsSameValue(play: nextPlay)
+        try validateHasCardsSameRank(play: nextPlay)
         
         if let currentPlay = currentPlay  {
             try validate(nextPlay: nextPlay, whenCurrentPlay: currentPlay)
@@ -45,7 +45,7 @@ class TrickIterator {
         
         let hasGreatRank = nextPlay.flatMap { card in currentPlay.map { card > $0 }  }.reduce (true) {$0 && $1}
         guard hasGreatRank else {
-            throw Error.lowerValue
+            throw Error.lowerRank
         }
         
         let hasSameNumberCards = (nextPlay.count == currentPlay.count)
@@ -55,26 +55,20 @@ class TrickIterator {
         }
     }
     
-    private func validateHasCardsSameValue(play: Play) throws {
-        let values = play.map {
-            $0.replacingOccurrences(of: "♣︎", with: "")
-                .replacingOccurrences(of: "♠︎", with: "")
-                .replacingOccurrences(of: "♥︎", with: "")
-                .replacingOccurrences(of: "♦︎", with: "")
-        }
-        if let firstValue = values.first {
-            for value in values {
-                guard firstValue == value else {
-                    throw Error.cardsDifferentValues
+    private func validateHasCardsSameRank(play: Play) throws {
+        if let firstRank = play.first {
+            for rank in play {
+                guard firstRank == rank else {
+                    throw Error.cardsDifferentRanks
                 }
             }
         }
     }
     
     enum Error: Swift.Error {
-        case lowerValue
+        case lowerRank
         case invalidNumberCards
-        case cardsDifferentValues
+        case cardsDifferentRanks
     }
     
 }
