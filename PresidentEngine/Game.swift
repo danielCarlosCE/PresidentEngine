@@ -109,3 +109,61 @@ class TrickIterator {
     }
 }
 
+/// named by @leandroico, thanks/blame him
+class PlayersSorter {
+    typealias Player = String
+    typealias Role = String
+    
+    let orderedRoles = ["president", "vice-president", "neutral", "vice-scum", "scum"]
+    
+    func sortByRoles(playersRoles: [Player: Role]) throws -> [Player] {
+        try validate(playersRoles: playersRoles)
+
+        var players = Array(playersRoles.keys)
+        for (player, role) in playersRoles {
+            let correctRoleIndex = orderedRoles.index(of: role)!
+            players[correctRoleIndex] = player
+        }
+        
+        return players
+    }
+    
+    private func validate(playersRoles: [Player: Role]) throws {
+        let players = Array(playersRoles.keys)
+        let roles = Array(playersRoles.values)
+        
+        let rulesValidator = RulesValidator()
+        try rulesValidator.validateThereAreExactlyFivePlayers(players: players)
+        try rulesValidator.validateRolesExist(roles: roles, in: orderedRoles)
+        try rulesValidator.validateRolesAreUnique(roles: roles)
+    }
+    
+    private class RulesValidator {
+        func validateThereAreExactlyFivePlayers(players: [Player]) throws {
+            guard players.count == 5 else { throw Error.invalidNumberPlayers }
+        }
+        
+        func validateRolesExist(roles: [Role], in knownRoles: [Role]) throws {
+            for role in roles {
+                guard knownRoles.contains(role) else {
+                    throw Error.invalidRole
+                }
+            }
+        }
+        
+        func validateRolesAreUnique(roles: [Role]) throws {
+            for role in roles {
+                guard (roles.filter { $0 == role }).count == 1 else {
+                    throw Error.repeatedRoles
+                }
+            }
+        }
+    }
+    
+    enum Error: Swift.Error {
+        case invalidNumberPlayers
+        case invalidRole
+        case repeatedRoles
+    }
+}
+
