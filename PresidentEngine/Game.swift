@@ -87,8 +87,9 @@ class TrickIterator {
         }
         
         func validatePlayHasGreaterRank(play: Play, thanCurrentPlay currentPlay: Play) throws {
-            let hasGreatRank = play.flatMap { card in currentPlay.map { card > $0 }  }.reduce (true) {$0 && $1}
-            guard hasGreatRank else {
+            guard let playCardRank = play.first, let currentPlayCardRank = currentPlay.first else { return }
+            
+            guard playCardRank > currentPlayCardRank else {
                 throw Error.lowerRank
             }
         }
