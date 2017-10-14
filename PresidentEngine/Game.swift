@@ -109,17 +109,17 @@ class TrickIterator {
     }
 }
 
-/// named by @leandroico, thanks/blame him
+/// named by @leandroico, thank/blame him
 class PlayersSorter {
     typealias Player = String
     typealias Role = String
     
-    let orderedRoles = ["president", "vice-president", "neutral", "vice-scum", "scum"]
+    private let orderedRoles = ["president", "vice-president", "neutral", "vice-scum", "scum"]
     
-    func sortByRoles(playersRoles: [Player: Role]) throws -> [Player] {
+    func sortByRoles(playersRoles: [(Player, Role)]) throws -> [Player] {
         try validate(playersRoles: playersRoles)
 
-        var players = Array(playersRoles.keys)
+        var players = playersRoles.map { $0.0 }
         for (player, role) in playersRoles {
             let correctRoleIndex = orderedRoles.index(of: role)!
             players[correctRoleIndex] = player
@@ -128,9 +128,22 @@ class PlayersSorter {
         return players
     }
     
-    private func validate(playersRoles: [Player: Role]) throws {
-        let players = Array(playersRoles.keys)
-        let roles = Array(playersRoles.values)
+    func sortByRoles(playersRoles: [(Player, Role)], consideringWinner winner: Player) throws -> [Player] {
+        var  playersRoles = try sortByRoles(playersRoles: playersRoles)
+        
+        guard let index = playersRoles.index(of: winner) else {
+            throw Error.givenWinnerNotPlaying
+        }
+        
+        let winner = playersRoles.remove(at: index)
+        playersRoles.insert(winner, at: 0)
+        
+        return playersRoles
+    }
+    
+    private func validate(playersRoles: [(Player, Role)]) throws {
+        let players = playersRoles.map { $0.0 }
+        let roles = playersRoles.map { $0.1 }
         
         let rulesValidator = RulesValidator()
         try rulesValidator.validateThereAreExactlyFivePlayers(players: players)
@@ -164,6 +177,7 @@ class PlayersSorter {
         case invalidNumberPlayers
         case invalidRole
         case repeatedRoles
+        case givenWinnerNotPlaying
     }
 }
 
