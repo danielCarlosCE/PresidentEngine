@@ -11,9 +11,6 @@ import XCTest
 
 class PlayersSorterTests: XCTestCase {
     
-    typealias Player = String
-    typealias Role = String
-    
     var sut: PlayersSorter!
     
     override func setUp() {
@@ -24,7 +21,7 @@ class PlayersSorterTests: XCTestCase {
     func testSortByRoles_withUnorderedRoles_orders() {
         let playersRoles = makePlayersRoles(["p1": "vice-scum", "p2": "vice-president", "p3": "president", "p4": "scum", "p5": "neutral"])
         
-        let playersOrdered:  [Player] = try! sut.sortByRoles(playersRoles: playersRoles)
+        let playersOrdered:  [Player] = try! sut.sortByRoles(players: playersRoles)
         
         XCTAssertEqual(playersOrdered, ["p3", "p2","p5", "p1", "p4"])
     }
@@ -32,7 +29,7 @@ class PlayersSorterTests: XCTestCase {
     func testSortByRoles_withOrderedRoles_returnSame() {
         let playersRoles = makePlayersRoles(["p1": "president", "p2": "vice-president", "px": "neutral", "p3": "vice-scum", "p4": "scum"])
         
-        let playersOrdered: [Player] = try! sut.sortByRoles(playersRoles: playersRoles)
+        let playersOrdered: [Player] = try! sut.sortByRoles(players: playersRoles)
         
         XCTAssertEqual(playersOrdered, ["p1", "p2", "px", "p3", "p4"])
     }
@@ -41,26 +38,20 @@ class PlayersSorterTests: XCTestCase {
         let playersRoles = makePlayersRoles(["p1": "president", "p2": "vice-president", "p3": "vice-scum", "p4": "scum"])
         
         
-        XCTAssertThrows(try sut.sortByRoles(playersRoles: playersRoles), specificError: PlayersSorter.Error.invalidNumberPlayers)
-    }
-    
-    func testSortByRoles_withUnknownRoles_throwsError() {
-        let playersRoles = makePlayersRoles(["p1": "invalidRole", "p2": "vice-president", "p3": "vice-scum", "p4": "scum", "p5": "president"])
-        
-        XCTAssertThrows(try sut.sortByRoles(playersRoles: playersRoles), specificError: PlayersSorter.Error.invalidRole)
+        XCTAssertThrows(try sut.sortByRoles(players: playersRoles), specificError: PlayersSorter.Error.invalidNumberPlayers)
     }
     
     func testSortByRoles_withRepeatedRoles_throwsError() {
         let playersRoles = makePlayersRoles(["p1": "president", "p2": "vice-president", "p3": "vice-scum", "p4": "scum", "p5": "president"])
         
-        XCTAssertThrows(try sut.sortByRoles(playersRoles: playersRoles), specificError: PlayersSorter.Error.repeatedRoles)
+        XCTAssertThrows(try sut.sortByRoles(players: playersRoles), specificError: PlayersSorter.Error.repeatedRoles)
     }
     
     func testSortByRolesConsideringWinner_withPresidentWinning_keepsSameOrder() {
         let playersRoles = makePlayersRoles(["p1": "president", "p2": "vice-president", "px": "neutral", "p3": "vice-scum", "p4": "scum"])
         let winner: Player = "p1"
        
-        let playersOrdered: [Player] = try! sut.sortByRoles(playersRoles: playersRoles, consideringWinner: winner)
+        let playersOrdered: [Player] = try! sut.sortByRoles(players: playersRoles, consideringWinner: winner)
         
         XCTAssertEqual(playersOrdered, ["p1", "p2", "px", "p3", "p4"])
     }
@@ -69,7 +60,7 @@ class PlayersSorterTests: XCTestCase {
         let playersRoles = makePlayersRoles(["p1": "president", "p2": "vice-president", "px": "neutral", "p3": "vice-scum", "p4": "scum"])
         let winner: Player = "p2"
         
-        let playersOrdered: [Player] = try! sut.sortByRoles(playersRoles: playersRoles, consideringWinner: winner)
+        let playersOrdered: [Player] = try! sut.sortByRoles(players: playersRoles, consideringWinner: winner)
         
         XCTAssertEqual(playersOrdered, ["p2", "p1", "px", "p3", "p4"])
     }
@@ -78,7 +69,7 @@ class PlayersSorterTests: XCTestCase {
         let playersRoles = makePlayersRoles(["p1": "president", "p2": "vice-president", "px": "neutral", "p3": "vice-scum", "p4": "scum"])
         let winner: Player = "p4"
         
-        let playersOrdered: [Player] = try! sut.sortByRoles(playersRoles: playersRoles, consideringWinner: winner)
+        let playersOrdered: [Player] = try! sut.sortByRoles(players: playersRoles, consideringWinner: winner)
         
         XCTAssertEqual(playersOrdered, ["p4", "p1", "p2", "px", "p3"])
     }
@@ -87,12 +78,58 @@ class PlayersSorterTests: XCTestCase {
         let playersRoles = makePlayersRoles(["p1": "president", "p2": "vice-president", "px": "neutral", "p3": "vice-scum", "p4": "scum"])
         let winner: Player = "pz"
         
-        XCTAssertThrows(try sut.sortByRoles(playersRoles: playersRoles, consideringWinner: winner), specificError: PlayersSorter.Error.givenWinnerNotPlaying)
+        XCTAssertThrows(try sut.sortByRoles(players: playersRoles, consideringWinner: winner), specificError: PlayersSorter.Error.givenWinnerNotPlaying)
     }
     
     //Mark: privates
-    private func makePlayersRoles(_ playersRoles: [Player: Role]) -> [(Player, Role)] {
-        return playersRoles.map { return ($0, $1) }
+    private func makePlayersRoles(_ playersRoles: [String: String]) -> [Player] {
+        return playersRoles.map { return Player(name: $0.key, role: .init(stringLiteral: $0.value)) }
     }
     
+}
+
+//when the roles doesn't matter
+extension Player: ExpressibleByStringLiteral {
+    public init(stringLiteral value: String)  {
+        self.init(value: value)
+    }
+    
+    public init(unicodeScalarLiteral value: String) {
+        self.init(value: value)
+    }
+    
+    private init(value: String) {
+        self.init(name: value, role: .president)
+    }
+}
+extension Role: ExpressibleByStringLiteral {
+    public init(stringLiteral value: String)  {
+        self.init(value: value)
+    }
+    
+    public init(unicodeScalarLiteral value: String) {
+        self.init(value: value)
+    }
+    
+    public init(extendedGraphemeClusterLiteral value: String)  {
+        self.init(value: value)
+    }
+    
+    private init(value: String) {
+        switch value {
+        case "president":
+            self = .president
+        case "vice-president":
+            self = .vicePresident
+        case "neutral":
+            self = .neutral
+        case "vice-scum":
+            self = .viceScum
+        case "scum":
+            self = .scum
+            
+        default:
+            fatalError("Unkown value for creating role: \(value)")
+        }
+    }
 }

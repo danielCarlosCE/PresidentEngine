@@ -19,6 +19,23 @@ struct Card {
     }
 }
 
+enum Role: Int {
+    case president
+    case vicePresident
+    case neutral
+    case viceScum
+    case scum
+}
+
+struct Player: Equatable {
+    var name: String
+    var role: Role
+    
+    static func ==(lhs: Player, rhs: Player) -> Bool {
+        return lhs.name == rhs.name
+    }
+}
+
 extension Card: Comparable {
     var value: Int {
         switch self.rank {
@@ -109,59 +126,44 @@ class TrickIterator {
     }
 }
 
-/// named by @leandroico, thank/blame him
 class PlayersSorter {
-    typealias Player = String
-    typealias Role = String
     
-    private let orderedRoles = ["president", "vice-president", "neutral", "vice-scum", "scum"]
-    
-    func sortByRoles(playersRoles: [(Player, Role)]) throws -> [Player] {
-        try validate(playersRoles: playersRoles)
+    func sortByRoles(players: [Player]) throws -> [Player] {
+        try validate(players: players)
 
-        var players = playersRoles.map { $0.0 }
-        for (player, role) in playersRoles {
-            let correctRoleIndex = orderedRoles.index(of: role)!
+        var players = players
+        for player in players {
+            let correctRoleIndex = player.role.rawValue
             players[correctRoleIndex] = player
         }
         
         return players
     }
     
-    func sortByRoles(playersRoles: [(Player, Role)], consideringWinner winner: Player) throws -> [Player] {
-        var  playersRoles = try sortByRoles(playersRoles: playersRoles)
+    func sortByRoles(players: [Player], consideringWinner winner: Player) throws -> [Player] {
+        var players = try sortByRoles(players: players)
         
-        guard let index = playersRoles.index(of: winner) else {
+        guard let index = players.index(of: winner) else {
             throw Error.givenWinnerNotPlaying
         }
         
-        let winner = playersRoles.remove(at: index)
-        playersRoles.insert(winner, at: 0)
+        let winner = players.remove(at: index)
+        players.insert(winner, at: 0)
         
-        return playersRoles
+        return players
     }
     
-    private func validate(playersRoles: [(Player, Role)]) throws {
-        let players = playersRoles.map { $0.0 }
-        let roles = playersRoles.map { $0.1 }
+    private func validate(players: [Player]) throws {
+        let roles = players.map { $0.role }
         
         let rulesValidator = RulesValidator()
         try rulesValidator.validateThereAreExactlyFivePlayers(players: players)
-        try rulesValidator.validateRolesExist(roles: roles, in: orderedRoles)
         try rulesValidator.validateRolesAreUnique(roles: roles)
     }
     
     private class RulesValidator {
         func validateThereAreExactlyFivePlayers(players: [Player]) throws {
             guard players.count == 5 else { throw Error.invalidNumberPlayers }
-        }
-        
-        func validateRolesExist(roles: [Role], in knownRoles: [Role]) throws {
-            for role in roles {
-                guard knownRoles.contains(role) else {
-                    throw Error.invalidRole
-                }
-            }
         }
         
         func validateRolesAreUnique(roles: [Role]) throws {
@@ -175,9 +177,7 @@ class PlayersSorter {
     
     enum Error: Swift.Error {
         case invalidNumberPlayers
-        case invalidRole
         case repeatedRoles
         case givenWinnerNotPlaying
     }
 }
-
