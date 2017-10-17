@@ -11,8 +11,6 @@ import XCTest
 
 class TrickIteratorTests: XCTestCase {
     
-    typealias Play = [Card]
-    
     func test_startTrick_withOnePlay_returnsResult() {
         var result: Play?
         let sut = makeSut(forPlays: [["4"]])

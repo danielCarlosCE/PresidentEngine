@@ -8,7 +8,28 @@
 
 import Foundation
 
-typealias Play = [Card]
+struct Play {
+    let cards: [Card]
+}
+
+extension Play: ExpressibleByArrayLiteral {
+    init(arrayLiteral elements: Card...) {
+        self.cards = elements
+    }
+    
+    typealias ArrayLiteralElement = Card
+}
+
+extension Play: Hashable {
+    static func ==(lhs: Play, rhs: Play) -> Bool {
+        return lhs.cards == rhs.cards
+    }
+    var hashValue: Int {
+        return self.cards.map{$0.hashValue}.reduce(5381) {
+            ($0 << 5) &+ $0 &+ Int($1)
+        }
+    }
+}
 
 enum Role: Int {
     case president
@@ -22,10 +43,27 @@ struct Player {
     var name: String
     var role: Role
     var hand: [Card] = []
+    var playerOrderer: PlayerPlayOrderer?
     
     init(name: String, role: Role) {
         self.name = name
         self.role = role
+    }
+}
+
+protocol PlayerPlayOrderer {
+    func nextPlay(forHand: [Card]) -> Range<Int>
+}
+
+extension Player {
+    mutating func nextPlay() -> Play? {
+        if let playOrderer = playerOrderer {
+            let range = playOrderer.nextPlay(forHand: hand)
+            let play = Array(hand[range])
+            hand.removeSubrange(range)
+            return Play(cards: play)
+        }
+        return nil
     }
 }
 
@@ -53,6 +91,12 @@ extension Card: Comparable {
     
     public static func ==(lhs: Card, rhs: Card) -> Bool {
         return lhs.value == rhs.value && lhs.rank == rhs.rank
+    }
+}
+
+extension Card: Hashable {
+    var hashValue: Int {
+        return "\(rank.rawValue)\(suit.rawValue)".hashValue
     }
 }
 
@@ -98,8 +142,8 @@ class TrickIterator {
     
     private class RulesValidator {
         func validatePlayHasOnlyOneRank(play: Play) throws {
-            if let firstRank = play.first {
-                for rank in play {
+            if let firstRank = play.cards.first?.rank {
+                for rank in (play.cards.map{ $0.rank }) {
                     guard rank == firstRank else {
                         throw Error.cardsDifferentRanks
                     }
@@ -108,7 +152,7 @@ class TrickIterator {
         }
         
         func validatePlayHasGreaterRank(play: Play, thanCurrentPlay currentPlay: Play) throws {
-            guard let playCardRank = play.first, let currentPlayCardRank = currentPlay.first else { return }
+            guard let playCardRank = play.cards.first, let currentPlayCardRank = currentPlay.cards.first else { return }
             
             guard playCardRank > currentPlayCardRank else {
                 throw Error.lowerRank
@@ -116,7 +160,7 @@ class TrickIterator {
         }
         
         func validatePlayHasRightNumberCards(play: Play, asCurrentPlay currentPlay: Play) throws {
-            let hasSameNumberCards = (play.count == currentPlay.count)
+            let hasSameNumberCards = (play.cards.count == currentPlay.cards.count)
             guard hasSameNumberCards else {
                 throw Error.invalidNumberCards
             }
@@ -211,5 +255,34 @@ class RoundIterator {
             player.hand = Array(cards[startIndex..<endIndex])
             return player
         }
+    }
+}
+
+class OneTrick {
+    private var players: [Player]
+    private var playsPlayers: [Play: Player] = [:]
+
+    init(players: [Player]) {
+        self.players = players
+    }
+    
+    func findWinner() throws -> Player {
+        var winner: Player!
+        try TrickIterator(playOrderer: self).startTrick { (winningPlay) in
+             winner = self.playsPlayers[winningPlay]
+        }
+        return winner
+    }
+}
+
+extension OneTrick: PlayOrderer {
+    var nextPlay: Play? {
+        guard players.count > 0 else { return nil }
+        var nextPlayer = players.removeFirst()
+        
+        guard let play = nextPlayer.nextPlay() else { return nil }
+        playsPlayers[play] = nextPlayer
+        
+        return play
     }
 }
