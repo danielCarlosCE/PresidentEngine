@@ -10,6 +10,10 @@
 		A43A7E961F48C1E1001187D8 /* PresidentEngine.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A43A7E8C1F48C1E1001187D8 /* PresidentEngine.framework */; };
 		A43A7EA71F48C212001187D8 /* TrickIteratorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A43A7EA61F48C212001187D8 /* TrickIteratorTests.swift */; };
 		A43A7EA91F48C36E001187D8 /* Game.swift in Sources */ = {isa = PBXBuildFile; fileRef = A43A7EA81F48C36E001187D8 /* Game.swift */; };
+		A44825C81F93859D0049DC40 /* RoundIteratorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A44825C71F93859D0049DC40 /* RoundIteratorTests.swift */; };
+		A4558C451F957B47004331EB /* Card.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4558C441F957B47004331EB /* Card.swift */; };
+		A4558C471F957BA6004331EB /* CardsPacket.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4558C461F957BA6004331EB /* CardsPacket.swift */; };
+		A4558C491F957BD4004331EB /* Deck.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4558C481F957BD4004331EB /* Deck.swift */; };
 		A4D35A731F4D1B420099148B /* PlayersSorterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4D35A721F4D1B420099148B /* PlayersSorterTests.swift */; };
 		A4D35A761F4D35870099148B /* XCTestCaseExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4D35A751F4D35870099148B /* XCTestCaseExtension.swift */; };
 /* End PBXBuildFile section */
@@ -31,6 +35,10 @@
 		A43A7E9C1F48C1E1001187D8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		A43A7EA61F48C212001187D8 /* TrickIteratorTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TrickIteratorTests.swift; sourceTree = "<group>"; };
 		A43A7EA81F48C36E001187D8 /* Game.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Game.swift; sourceTree = "<group>"; };
+		A44825C71F93859D0049DC40 /* RoundIteratorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoundIteratorTests.swift; sourceTree = "<group>"; };
+		A4558C441F957B47004331EB /* Card.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Card.swift; sourceTree = "<group>"; };
+		A4558C461F957BA6004331EB /* CardsPacket.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardsPacket.swift; sourceTree = "<group>"; };
+		A4558C481F957BD4004331EB /* Deck.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Deck.swift; sourceTree = "<group>"; };
 		A4D35A721F4D1B420099148B /* PlayersSorterTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlayersSorterTests.swift; sourceTree = "<group>"; };
 		A4D35A751F4D35870099148B /* XCTestCaseExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = XCTestCaseExtension.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -77,6 +85,7 @@
 			children = (
 				A43A7E901F48C1E1001187D8 /* Info.plist */,
 				A43A7EA81F48C36E001187D8 /* Game.swift */,
+				A4558C431F957B30004331EB /* FrenchPlayingCards */,
 			);
 			path = PresidentEngine;
 			sourceTree = "<group>";
@@ -88,8 +97,19 @@
 				A43A7E9C1F48C1E1001187D8 /* Info.plist */,
 				A43A7EA61F48C212001187D8 /* TrickIteratorTests.swift */,
 				A4D35A721F4D1B420099148B /* PlayersSorterTests.swift */,
+				A44825C71F93859D0049DC40 /* RoundIteratorTests.swift */,
 			);
 			path = PresidentEngineTests;
+			sourceTree = "<group>";
+		};
+		A4558C431F957B30004331EB /* FrenchPlayingCards */ = {
+			isa = PBXGroup;
+			children = (
+				A4558C441F957B47004331EB /* Card.swift */,
+				A4558C461F957BA6004331EB /* CardsPacket.swift */,
+				A4558C481F957BD4004331EB /* Deck.swift */,
+			);
+			path = FrenchPlayingCards;
 			sourceTree = "<group>";
 		};
 		A4D35A741F4D35750099148B /* Extensions */ = {
@@ -211,7 +231,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A4558C491F957BD4004331EB /* Deck.swift in Sources */,
 				A43A7EA91F48C36E001187D8 /* Game.swift in Sources */,
+				A4558C451F957B47004331EB /* Card.swift in Sources */,
+				A4558C471F957BA6004331EB /* CardsPacket.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -219,6 +242,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A44825C81F93859D0049DC40 /* RoundIteratorTests.swift in Sources */,
 				A43A7EA71F48C212001187D8 /* TrickIteratorTests.swift in Sources */,
 				A4D35A761F4D35870099148B /* XCTestCaseExtension.swift in Sources */,
 				A4D35A731F4D1B420099148B /* PlayersSorterTests.swift in Sources */,

@@ -31,13 +31,10 @@ class TrickIteratorTests: XCTestCase {
         XCTAssertEqual(result!, ["4"])
     }
     
-    func test_startTrick_withoutPlays_returnsNoPlay() {
-        var result: Play?
+    func test_startTrick_withoutPlays_throwsError() {
         let sut = makeSut(forPlays: [])
-        
-        try! sut.startTrick { result = $0 }
-        
-        XCTAssertNil(result)
+                
+        XCTAssertThrows(try sut.startTrick {_ in }, specificError: TrickIterator.Error.nonePlaysFromOrderer)
     }
     
     func test_startTrick_withSetCardsPlays_returnsResult() {
@@ -117,6 +114,8 @@ extension Card: ExpressibleByStringLiteral {
     }
     
     private init(value: String) {
+        //suit doesn't matter here
+        self.suit = .clubs
         switch value {
         case "A", "a":
             self.rank = .aces

@@ -10,15 +10,6 @@ import Foundation
 
 typealias Play = [Card]
 
-struct Card {
-    let rank: Rank
-    enum Rank: Int {
-        case aces = 1
-        case two, three, four, five, six, seven, eight, nine, ten
-        case jack, queen, king
-    }
-}
-
 enum Role: Int {
     case president
     case vicePresident
@@ -27,10 +18,18 @@ enum Role: Int {
     case scum
 }
 
-struct Player: Equatable {
+struct Player {
     var name: String
     var role: Role
+    var hand: [Card] = []
     
+    init(name: String, role: Role) {
+        self.name = name
+        self.role = role
+    }
+}
+
+extension Player: Equatable {
     static func ==(lhs: Player, rhs: Player) -> Bool {
         return lhs.name == rhs.name
     }
@@ -53,7 +52,7 @@ extension Card: Comparable {
     }
     
     public static func ==(lhs: Card, rhs: Card) -> Bool {
-        return lhs.value == rhs.value
+        return lhs.value == rhs.value && lhs.rank == rhs.rank
     }
 }
 
@@ -64,23 +63,28 @@ protocol PlayOrderer {
 
 class TrickIterator {
     private let playOrderer: PlayOrderer
-    private var currentPlay: Play?
     
     init(playOrderer: PlayOrderer) {
         self.playOrderer = playOrderer
     }
     
-    func startTrick(resultCallback: (Play?) -> Void) throws {
+    func startTrick(resultCallback: (Play) -> Void) throws {
+        var currentPlay: Play?
         
         while let nextPlay = playOrderer.nextPlay {
-            try validate(nextPlay)
+            try validate(nextPlay, forCurrentPlay: currentPlay)
             currentPlay = nextPlay
         }
         
-        resultCallback(currentPlay)
+        let ordererHasNoPlays = (currentPlay == nil)
+        if ordererHasNoPlays {
+            throw Error.nonePlaysFromOrderer
+        }
+        
+        resultCallback(currentPlay!)
     }
     
-    private func validate(_ nextPlay: Play) throws {
+    private func validate(_ nextPlay: Play, forCurrentPlay currentPlay: Play?) throws {
         let rulesValidator = RulesValidator()
         
         try rulesValidator.validatePlayHasOnlyOneRank(play: nextPlay)
@@ -123,6 +127,7 @@ class TrickIterator {
         case lowerRank
         case invalidNumberCards
         case cardsDifferentRanks
+        case nonePlaysFromOrderer
     }
 }
 
@@ -179,5 +184,32 @@ class PlayersSorter {
         case invalidNumberPlayers
         case repeatedRoles
         case givenWinnerNotPlaying
+    }
+}
+
+class RoundIterator {
+    var players: [Player]
+    init(players: [Player]) {
+        self.players = players
+    }
+    func startRound() throws {
+        self.players = dealCards(players: players)
+        self.players = try PlayersSorter().sortByRoles(players: players)
+    }
+    
+    private func dealCards(players: [Player]) -> [Player] {
+        let cards = Deck(numberOfPackets: 1).shuffled()
+        //TODO: show reminder somehow
+        let perPlayer = Int(cards.count / players.count)
+        
+        return players.enumerated().map { index, player in
+            var player = player
+            
+            let startIndex = index * perPlayer
+            let endIndex = startIndex + perPlayer
+            
+            player.hand = Array(cards[startIndex..<endIndex])
+            return player
+        }
     }
 }
