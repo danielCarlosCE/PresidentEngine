@@ -58,6 +58,7 @@ class RoundIteratorTests: XCTestCase {
      
      //first deal cards - CardsDealear
      //order by roles, before starting trick
+     //exchange cards (president-scum; vicePresident-viceScum)
      
      while()
      

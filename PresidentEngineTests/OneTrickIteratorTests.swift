@@ -1,5 +1,5 @@
 //
-//  OneTrickTests.swift
+//  OneTrickIteratorTests.swift
 //  PresidentEngineTests
 //
 //  Created by Daniel Carlos on 10/16/17.
@@ -9,7 +9,7 @@
 import XCTest
 @testable import PresidentEngine
 
-class OneTrickTests: XCTestCase {
+class OneTrickIteratorTests: XCTestCase {
     var players: [Player] = [
         .init(name: "p1", role: .president),
         .init(name: "p2", role: .vicePresident),
@@ -28,7 +28,7 @@ class OneTrickTests: XCTestCase {
     func test_findWinner_withLasPlayFromPresident_returnsPresident() {
         players[0].hand = hands.first!
         players[0].playerOrderer = MockPlayerPlayOrderer()
-        let sut = OneTrick(players: players)
+        let sut = OneTrickIterator(players: players)
         
         let winner = try! sut.findWinner()
         
@@ -40,7 +40,7 @@ class OneTrickTests: XCTestCase {
         players[0].playerOrderer = MockPlayerPlayOrderer()
         players[1].hand = hands[1]
         players[1].playerOrderer = MockPlayerPlayOrderer()
-        let sut = OneTrick(players: players)
+        let sut = OneTrickIterator(players: players)
         
         let winner = try! sut.findWinner()
         
@@ -52,7 +52,7 @@ class OneTrickTests: XCTestCase {
             players[index].hand = hands[index]
             players[index].playerOrderer = MockPlayerPlayOrderer()
         }
-        let sut = OneTrick(players: players)
+        let sut = OneTrickIterator(players: players)
         
         let winner = try! sut.findWinner()
         

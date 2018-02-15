@@ -9,6 +9,7 @@
 import Foundation
 
 struct Play {
+    ///TODO: If the play is not `skip` the array can't be empty. Need to guaratee that somehow
     let cards: [Card]
 }
 
@@ -56,6 +57,7 @@ protocol PlayerPlayOrderer {
 }
 
 extension Player {
+    ///TODO: this could not be nil, whether it's cards or skip, the Player needs to play
     mutating func nextPlay() -> Play? {
         if let playOrderer = playerOrderer {
             let range = playOrderer.nextPlay(forHand: hand)
@@ -105,13 +107,20 @@ protocol PlayOrderer {
     var nextPlay: Play? {get}
 }
 
+///Responsible for starting a trick and ask for plays until finding a winner
+///Validate each play based on the context and rules
+///This class doens't know anything about Players, only plays
 class TrickIterator {
     private let playOrderer: PlayOrderer
     
     init(playOrderer: PlayOrderer) {
         self.playOrderer = playOrderer
     }
-    
+
+    ///Starts the trick asking for the first play to PlayOrderer
+    ///it keeps asking for next plays until the orderer returns nil
+    ///it validates each play based on the rules
+    ///once it hits the last play, it returns the winner on the @resultCallback closure
     func startTrick(resultCallback: (Play) -> Void) throws {
         var currentPlay: Play?
         
@@ -142,21 +151,18 @@ class TrickIterator {
     
     private class RulesValidator {
         func validatePlayHasOnlyOneRank(play: Play) throws {
-            if let firstRank = play.cards.first?.rank {
-                for rank in (play.cards.map{ $0.rank }) {
-                    guard rank == firstRank else {
-                        throw Error.cardsDifferentRanks
-                    }
-                }
+            guard let firstRank = play.cards.first?.rank else { return }
+
+            let ranks = play.cards.map{ $0.rank }
+            try ranks.forEach { rank in
+                guard rank == firstRank else { throw Error.cardsDifferentRanks }
             }
         }
         
         func validatePlayHasGreaterRank(play: Play, thanCurrentPlay currentPlay: Play) throws {
             guard let playCardRank = play.cards.first, let currentPlayCardRank = currentPlay.cards.first else { return }
             
-            guard playCardRank > currentPlayCardRank else {
-                throw Error.lowerRank
-            }
+            guard playCardRank > currentPlayCardRank else { throw Error.lowerRank }
         }
         
         func validatePlayHasRightNumberCards(play: Play, asCurrentPlay currentPlay: Play) throws {
@@ -175,6 +181,8 @@ class TrickIterator {
     }
 }
 
+///Responsible for sorting players based on roles [and trick's winner]
+///it validates there're exactly 5 players and no repeated role
 class PlayersSorter {
     
     func sortByRoles(players: [Player]) throws -> [Player] {
@@ -231,14 +239,21 @@ class PlayersSorter {
     }
 }
 
+///Responsible for starting round and for the round's flow (dealing, sorting, tricking, etc)
 class RoundIterator {
     var players: [Player]
     init(players: [Player]) {
         self.players = players
     }
     func startRound() throws {
+        //while players want to continue
         self.players = dealCards(players: players)
         self.players = try PlayersSorter().sortByRoles(players: players)
+        //exchange cards (president-scum; vicePresident-viceScum)
+        //while (more than 1 player with cards)
+         //start new trick - find winner, reorder
+         //kick players without cards (store their position on trick)
+        //reorder based on new positions
     }
     
     private func dealCards(players: [Player]) -> [Player] {
@@ -258,14 +273,17 @@ class RoundIterator {
     }
 }
 
-class OneTrick {
-    private var players: [Player]
-    private var playsPlayers: [Play: Player] = [:]
+///Responsible for find the winner for one trick only
+///While TrickIterator tracks only Plays, this class handles Players as wells
+class OneTrickIterator {
+    fileprivate var players: [Player]
+    fileprivate var playsPlayers: [Play: Player] = [:]
 
     init(players: [Player]) {
         self.players = players
     }
-    
+
+    ///Ask for each player for exactly one play and return the winner
     func findWinner() throws -> Player {
         var winner: Player!
         try TrickIterator(playOrderer: self).startTrick { (winningPlay) in
@@ -275,7 +293,7 @@ class OneTrick {
     }
 }
 
-extension OneTrick: PlayOrderer {
+extension OneTrickIterator: PlayOrderer {
     var nextPlay: Play? {
         guard players.count > 0 else { return nil }
         var nextPlayer = players.removeFirst()
