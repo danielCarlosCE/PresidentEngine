@@ -250,10 +250,14 @@ class RoundIterator {
         self.players = dealCards(players: players)
         self.players = try PlayersSorter().sortByRoles(players: players)
         //exchange cards (president-scum; vicePresident-viceScum)
-        //while (more than 1 player with cards)
-         //start new trick - find winner, reorder
-         //kick players without cards (store their position on trick)
-        //reorder based on new positions
+
+        //playersKeeper
+        //while (playersKeeper.players.count > 0)
+         //winner = OneTrickIterator.findWinner
+         //playersKeeper.kickOffPlayers
+         //playersKeeper.players = playersSorter.sortByRoles(players: playersKeeper.players, consideringWinner: winner)
+
+        //reorder based on playersKickedOffOrder
     }
     
     private func dealCards(players: [Player]) -> [Player] {
@@ -303,4 +307,30 @@ extension OneTrickIterator: PlayOrderer {
         
         return play
     }
+}
+
+///Responsible for keeping players in order after being kicked off without cards
+struct PlayersKeeper {
+    private(set) var players: [Player]
+    private(set) var playersKickedOffOrder: [Player] = []
+
+    init(players: [Player]) {
+        self.players = players
+    }
+
+    ///Removes players without cards on hand and updates @playersKickedOffOrder
+    mutating func kickOffPlayers() {
+        players = players.filter {
+            guard $0.hand.count > 0 else {
+                playersKickedOffOrder.append($0)
+                return false
+            }
+            return true
+        }
+
+        if players.count == 1  {
+            playersKickedOffOrder.append(players.removeLast())
+        }
+    }
+
 }

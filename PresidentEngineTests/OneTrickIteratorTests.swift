@@ -17,13 +17,7 @@ class OneTrickIteratorTests: XCTestCase {
         .init(name: "p4", role: .viceScum),
         .init(name: "p5", role: .scum)
     ]
-    let hands: [[Card]] = [
-        [Card(rank: .three, suit: .spades)],
-        [Card(rank: .four, suit: .spades)],
-        [Card(rank: .five, suit: .spades)],
-        [Card(rank: .six, suit: .spades)],
-        [Card(rank: .seven, suit: .spades)]
-    ]
+    let hands: [[Card]] = [ ["3♠︎"], ["4♥︎"], ["5♦︎"], ["6♥︎"], ["7♣︎"] ]
     
     func test_findWinner_withLasPlayFromPresident_returnsPresident() {
         players[0].hand = hands.first!
