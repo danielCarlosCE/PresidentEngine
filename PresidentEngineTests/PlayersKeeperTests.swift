@@ -18,9 +18,9 @@ class PlayersKeeperTests: XCTestCase {
                                                   withHands: [ [], ["4♥︎"], ["5♦︎"], ["6♥︎"], ["7♣︎"] ] )
         var sut = PlayersKeeper(players: players)
 
-        sut.kickOffPlayers()
+        sut.kickOffPlayersWithoutCards()
 
-        XCTAssertEqual(sut.players, usersFactory.make(["p2": "vice-president", "px": "neutral", "p3": "vice-scum", "p4": "scum"]))
+        XCTAssertEqual(sut.playersWithCards, usersFactory.make(["p2": "vice-president", "px": "neutral", "p3": "vice-scum", "p4": "scum"]))
     }
 
     func testKickOfPlayers_withNoEmptyHandPlayers_removesNone() {
@@ -28,9 +28,9 @@ class PlayersKeeperTests: XCTestCase {
                                                   withHands: [ ["3♣︎"], ["3♠︎"], ["4♥︎"], ["5♦︎"], ["6♥︎"], ["7♣︎"] ] )
         var sut = PlayersKeeper(players: players)
 
-        sut.kickOffPlayers()
+        sut.kickOffPlayersWithoutCards()
 
-        XCTAssertEqual(sut.players, usersFactory.make(["p1": "president", "p2": "vice-president", "px": "neutral", "p3": "vice-scum", "p4": "scum"]))
+        XCTAssertEqual(sut.playersWithCards, usersFactory.make(["p1": "president", "p2": "vice-president", "px": "neutral", "p3": "vice-scum", "p4": "scum"]))
     }
 
     func testPlayersKickedOffOrder_withOnePlayerOff_returnsPlayer() {
@@ -38,7 +38,7 @@ class PlayersKeeperTests: XCTestCase {
                                                   withHands: [ [], ["4♥︎"], ["5♦︎"], ["6♥︎"], ["7♣︎"] ] )
         var sut = PlayersKeeper(players: players)
 
-        sut.kickOffPlayers()
+        sut.kickOffPlayersWithoutCards()
 
         XCTAssertEqual(sut.playersKickedOffOrder, usersFactory.make(["p1": "president"]))
     }
@@ -48,7 +48,7 @@ class PlayersKeeperTests: XCTestCase {
                                                   withHands: [ ["3♣︎"], ["4♥︎"], ["5♦︎"], ["6♥︎"], ["7♣︎"] ] )
         var sut = PlayersKeeper(players: players)
 
-        sut.kickOffPlayers()
+        sut.kickOffPlayersWithoutCards()
 
         XCTAssertEqual(sut.playersKickedOffOrder, [])
     }
@@ -58,7 +58,7 @@ class PlayersKeeperTests: XCTestCase {
                                                   withHands: [ [], [], [], [], ["7♣︎"] ] )
         var sut = PlayersKeeper(players: players)
 
-        sut.kickOffPlayers()
+        sut.kickOffPlayersWithoutCards()
 
         XCTAssertEqual(sut.playersKickedOffOrder, usersFactory.make(["p1": "president", "p2": "vice-president", "px": "neutral", "p3": "vice-scum", "p4": "scum"]))
     }

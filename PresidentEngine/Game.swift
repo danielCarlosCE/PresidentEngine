@@ -248,41 +248,61 @@ class PlayersSorter {
 
 ///Responsible for starting round and for the round's flow (dealing, sorting, tricking, etc)
 class RoundIterator {
-    var players: [Player]
+    private let dealer = Dealer()
+    private var keeper: PlayersKeeper
+    private var sorter: PlayersSorter
     init(players: [Player]) {
-        self.players = players
+        self.keeper = PlayersKeeper(players: players)
+        self.sorter = PlayersSorter()
     }
-    func startRound() throws {
-        //while players want to continue
-        self.players = dealCards(players: players)
-        self.players = try PlayersSorter().sortByRoles(players: players)
-        //exchange cards (president-scum; vicePresident-viceScum)
-
-        //playersKeeper
-        //while (playersKeeper.players.count > 0)
-         //winner = OneTrickIterator.findWinner
-         //playersKeeper.kickOffPlayers
-         //playersKeeper.players = playersSorter.sortByRoles(players: playersKeeper.players, consideringWinner: winner)
-
-        //reorder based on playersKickedOffOrder
+    func startRound() throws -> [Player] {
+        keeper.playersWithCards = dealCards(players: keeper.playersWithCards)
+        keeper.playersWithCards = try sortByRoles(players: keeper.playersWithCards)
+        //TODO: exchange cards (president-scum; vicePresident-viceScum)
+        while keeper.playersWithCards.count > 0 {
+            let (winner, players) = try findWinner(players: keeper.playersWithCards)
+            keeper.playersWithCards = players
+            keeper.kickOffPlayersWithoutCards()
+            keeper.playersWithCards = try sortByRoles(players: keeper.playersWithCards, consideringWinner: winner)
+        }
+        return keeper.playersKickedOffOrder
     }
-    
-    private func dealCards(players: [Player]) -> [Player] {
+
+    func dealCards(players: [Player]) -> [Player] {
+        return dealer.dealCards(players: players)
+    }
+
+    func sortByRoles(players: [Player]) throws -> [Player] {
+        return try sorter.sortByRoles(players: keeper.playersWithCards)
+    }
+
+    func findWinner(players: [Player]) throws -> (Player, [Player]) {
+        return try OneTrickIterator(players: keeper.playersWithCards).findWinner()
+    }
+
+    func sortByRoles(players: [Player], consideringWinner winner: Player) throws -> [Player] {
+        return try sorter.sortByRoles(players: keeper.playersWithCards, consideringWinner: winner)
+    }
+}
+
+class Dealer {
+    func dealCards(players: [Player]) -> [Player] {
         let cards = Deck(numberOfPackets: 1).shuffled()
         //TODO: show reminder somehow
         let perPlayer = Int(cards.count / players.count)
-        
+
         return players.enumerated().map { index, player in
             var player = player
-            
+
             let startIndex = index * perPlayer
             let endIndex = startIndex + perPlayer
-            
+
             player.hand = Array(cards[startIndex..<endIndex])
             return player
         }
     }
 }
+
 
 ///Responsible for find the winner for one trick only
 ///While TrickIterator tracks only Plays, this class handles Players as wells
@@ -323,16 +343,16 @@ extension OneTrickIterator: PlayOrderer {
 
 ///Responsible for keeping players in order after being kicked off without cards
 struct PlayersKeeper {
-    private(set) var players: [Player]
+    var playersWithCards: [Player]
     private(set) var playersKickedOffOrder: [Player] = []
 
     init(players: [Player]) {
-        self.players = players
+        self.playersWithCards = players
     }
 
     ///Removes players without cards on hand and updates @playersKickedOffOrder
-    mutating func kickOffPlayers() {
-        players = players.filter {
+    mutating func kickOffPlayersWithoutCards() {
+        playersWithCards = playersWithCards.filter {
             guard $0.hand.count > 0 else {
                 playersKickedOffOrder.append($0)
                 return false
@@ -340,8 +360,8 @@ struct PlayersKeeper {
             return true
         }
 
-        if players.count == 1  {
-            playersKickedOffOrder.append(players.removeLast())
+        if playersWithCards.count == 1  {
+            playersKickedOffOrder.append(playersWithCards.removeLast())
         }
     }
 

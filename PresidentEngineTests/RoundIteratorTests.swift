@@ -10,79 +10,131 @@ import XCTest
 @testable import PresidentEngine
 
 class RoundIteratorTests: XCTestCase {
-    
-    let players: [Player] = [
-        .init(name: "p1", role: .president),
-        .init(name: "p2", role: .vicePresident),
-        .init(name: "p3", role: .neutral),
-        .init(name: "p4", role: .viceScum),
-        .init(name: "p5", role: .scum)
-    ]
-    
-    func test_startRound_dealsCards() {
-        let sut = RoundIterator(players: players)
-        
-        try! sut.startRound()
-        
-        let hands: [[Card]] = sut.players.map { $0.hand }
-        let noEmptyHand = hands.filter{$0.count > 0}.count == hands.count
-        XCTAssert(noEmptyHand)
-    }
-    
-    func test_startRound_dealsSameNumberOfCards() {
-        let sut = RoundIterator(players: players)
-        
-        try! sut.startRound()
-        
-        let hands: [[Card]] = sut.players.map { $0.hand }
-        let handsSameNumberCards = Set(hands.map {$0.count}).count == 1
-        XCTAssertTrue(handsSameNumberCards)
-    }
-    
-    func test_startRound_ordersByRole() {
-        var players = self.players
-        players.swapAt(0, 1)
-        let sut = RoundIterator(players: players)
-        
-        try! sut.startRound()
-        
-        let roundPlayers = sut.players
-        XCTAssertEqual(roundPlayers, self.players)
-    }
-    
-   
 
-    /*
-     while()
-     //start round (a set of tricks, until everyone is done with cards)
-     
-     //first deal cards - CardsDealear
-     //order by roles, before starting trick
-     //exchange cards (president-scum; vicePresident-viceScum)
-     
-     while()
-     
-     //start trick
-     //ask for each play until we have a winner, keeping updating player's hands
-     //we need to keep track of players and theirs plays to be able to determine who won //PlayersManager
-     
-     //here we'll cut from the game anyone who is done with cards, and keep track of their (new) position
-     //here we'll have new order for the next trick if president didn't win this trick, putting winner in front of president
-     
-     //here we'll go to the next trick only if we still have a minimum of 2 players with cards //PlayersManager
-     
-     //if only 1 or 0 players remain,
-     save round result,
-     give new roles and
-     ask if want continue playing
-     
-     //if want continue playing, then start new round
-     //else, end game and show rounds results
-     */
+    var players: [Player] = []
+
+    override func setUp() {
+        players = playersWithSimplePlaysOrderer
+    }
+
+    func testStartRound_withOneTrick_iteratesRightOrder() {
+        let sut = makeSut(for: players)
+
+        _ = try! sut.startRound()
+
+        XCTAssertEqual(sut.methodsCallsOrder,
+                        [.dealCards, .sortByRoles, .findWinner, .sortByRolesConsideringWinner])
+    }
+
+    func testStartRound_withWinningSameOrder_returnSameOrder() {
+        let sut = makeSut(for: players)
+
+        let roundResult: [Player] = try! sut.startRound()
+
+        XCTAssertEqual(roundResult, ["p1", "p2", "p3", "p4", "p5"])
+    }
+
+    func testStartRound_withMultipleTricksLasting_returnRightOrder() {
+
+        let hands: [[Card]] = [
+            ["J♠︎", "Q♠︎"], ["Q♥︎", "2♣︎"], ["10♦︎", "10♥︎"], ["6♥︎", "7♥︎"], ["3♣︎", "4♥︎"]
+        ]
+        let plays: [PlayerPlaysOrdererPlay] =
+            [.go(0..<1), .go(0..<1), .skip, .skip, .skip,
+             .go(0..<1), .skip, .skip, .skip, .skip,
+             .go(0..<1), .skip, .skip, .skip,
+             .go(0..<2), .skip, .skip,
+             .go(0..<1), .skip,
+             .go(0..<1), .skip,
+             .go(0..<1),
+             .go(0..<1)]
+
+        let playsOrderer = PlaysOrderer(plays: plays)
+        let players = playersWithoutPlaysOrderer.map { player -> Player in
+            var player = player
+            player.playsOrderer = playsOrderer
+            return player
+        }
+        let sut = makeSut(for: players)
+        sut.hands = hands
+
+        let roundResult: [Player] = try! sut.startRound()
+
+        XCTAssertEqual(roundResult, ["p2", "p1", "p3", "p4", "p5"])
+    }
+
+
+    // MARK: Helpers
+
+    private func makeSut(for players: [Player]) -> MockRoundIterator {
+        return MockRoundIterator(players: players)
+    }
+
+    private var playersWithoutPlaysOrderer: [Player] {
+        return [.init(name: "p1", role: .president),
+                .init(name: "p2", role: .vicePresident),
+                .init(name: "p3", role: .neutral),
+                .init(name: "p4", role: .viceScum),
+                .init(name: "p5", role: .scum)]
+    }
+
+    private var playersWithSimplePlaysOrderer: [Player] {
+        let playsOrderer = PlaysOrderer()
+        return playersWithoutPlaysOrderer.map { (player: Player) -> Player in
+                    var player = player
+                    player.playsOrderer = playsOrderer
+                    return player
+        }
+    }
+
+    class PlaysOrderer: PlayerPlaysOrderer {
+        private var plays: [PlayerPlaysOrdererPlay]
+        init(plays: [PlayerPlaysOrdererPlay] = []) {
+            self.plays = plays
+        }
+        func nextPlay(forHand hand: [Card]) -> PlayerPlaysOrdererPlay {
+            guard !plays.isEmpty else {
+                return .go(hand.startIndex..<hand.endIndex)
+            }
+            return plays.removeFirst()
+        }
+    }
 }
 
-extension Player: CustomStringConvertible {
-    public var description: String {
-        return "\(name): \(role)"
+class MockRoundIterator: RoundIterator {
+    var methodsCallsOrder: [Method] = []
+    var hands: [[Card]] = [ ["3♠︎"], ["4♥︎"], ["5♦︎"], ["6♥︎"], ["7♣︎"] ]
+
+    override func dealCards(players: [Player]) -> [Player]  {
+        methodsCallsOrder.append(.dealCards)
+        return players.enumerated().map {
+            var player = $1
+            player.hand = hands[$0]
+            return player
+        }
+    }
+
+    override func sortByRoles(players: [Player]) throws -> [Player] {
+        methodsCallsOrder.append(.sortByRoles)
+        return try super.sortByRoles(players: players)
+    }
+
+    override func findWinner(players: [Player]) throws -> (Player, [Player]) {
+        methodsCallsOrder.append(.findWinner)
+        return try super.findWinner(players: players)
+    }
+
+    override func sortByRoles(players: [Player], consideringWinner winner: Player) throws -> [Player] {
+        methodsCallsOrder.append(.sortByRolesConsideringWinner)
+        return try super.sortByRoles(players: players, consideringWinner: winner)
+    }
+
+    enum Method {
+        case dealCards
+        case sortByRoles
+        case findWinner
+        case sortByRolesConsideringWinner
     }
 }
+
+
