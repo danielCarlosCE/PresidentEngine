@@ -21,22 +21,22 @@ class OneTrickIteratorTests: XCTestCase {
     
     func test_findWinner_withLasPlayFromPresident_returnsPresident() {
         players[0].hand = hands.first!
-        players[0].playerOrderer = MockPlayerPlayOrderer()
+        players[0].playsOrderer = MockPlayerPlayOrderer()
         let sut = OneTrickIterator(players: players)
         
-        let winner = try! sut.findWinner()
+        let winner = try! sut.findWinner().0
         
         XCTAssertEqual(winner, Player(name: "p1", role: .president))
     }
     
     func test_findWinner_withLastPlayFromVicePresident_returnsVicePresident() {
         players[0].hand = hands.first!
-        players[0].playerOrderer = MockPlayerPlayOrderer()
+        players[0].playsOrderer = MockPlayerPlayOrderer()
         players[1].hand = hands[1]
-        players[1].playerOrderer = MockPlayerPlayOrderer()
+        players[1].playsOrderer = MockPlayerPlayOrderer()
         let sut = OneTrickIterator(players: players)
         
-        let winner = try! sut.findWinner()
+        let winner = try! sut.findWinner().0
         
         XCTAssertEqual(winner, Player(name: "p2", role: .vicePresident))
     }
@@ -44,16 +44,31 @@ class OneTrickIteratorTests: XCTestCase {
     func test_findWinner_withLasPlayFromScum_returnsScum() {
         for (index, _) in players.enumerated() {
             players[index].hand = hands[index]
-            players[index].playerOrderer = MockPlayerPlayOrderer()
+            players[index].playsOrderer = MockPlayerPlayOrderer()
         }
         let sut = OneTrickIterator(players: players)
         
-        let winner = try! sut.findWinner()
+        let winner = try! sut.findWinner().0
         
         XCTAssertEqual(winner, Player(name: "p5", role: .scum))
     }
+
+    func test_findWinner_returnsPlayersSameOrderHandsUsed() {
+        self.players[0].hand = hands.first!
+        self.players[0].playsOrderer = MockPlayerPlayOrderer()
+        let sut = OneTrickIterator(players: self.players)
+
+        let (_, players): (Player, [Player]) = try! sut.findWinner()
+
+        XCTAssertEqual(players, self.players)
+        let atLeast1PlayerDifferentHands = players.filter { player in
+            guard let originalPlayer = (self.players.filter { $0 == player }).first else { return false }
+            return player.hand != originalPlayer.hand
+        }.count > 0
+        XCTAssertTrue(atLeast1PlayerDifferentHands)
+    }
     
-    class MockPlayerPlayOrderer: PlayerPlayOrderer {
+    class MockPlayerPlayOrderer: PlayerPlaysOrderer {
         func nextPlay(forHand hand: [Card]) -> Range<Int> {
             return hand.startIndex..<hand.endIndex
         }

@@ -34,12 +34,13 @@ class PlayersSorterTests: XCTestCase {
         
         XCTAssertEqual(playersOrdered, ["p1", "p2", "px", "p3", "p4"])
     }
-    
-    func testSortByRoles_withNot5Players_throwsError() {
-        let playersRoles = usersFactory.make(["p1": "president", "p2": "vice-president", "p3": "vice-scum", "p4": "scum"])
-        
-        
-        XCTAssertThrows(try sut.sortByRoles(players: playersRoles), specificError: PlayersSorter.Error.invalidNumberPlayers)
+
+    func testSortByRoles_withLessThan5Players_orders() {
+        let playersRoles = usersFactory.make(["p1": "vice-scum", "p2": "vice-president", "p3": "president", "p4": "scum"])
+
+        let playersOrdered:  [Player] = try! sut.sortByRoles(players: playersRoles)
+
+        XCTAssertEqual(playersOrdered, ["p3", "p2", "p1", "p4"])
     }
     
     func testSortByRoles_withRepeatedRoles_throwsError() {
@@ -75,11 +76,13 @@ class PlayersSorterTests: XCTestCase {
         XCTAssertEqual(playersOrdered, ["p4", "p1", "p2", "px", "p3"])
     }
     
-    func testSortByRolesConsideringWinner_withWinnerNotPlaying_throwsError() {
-        let playersRoles = usersFactory.make(["p1": "president", "p2": "vice-president", "px": "neutral", "p3": "vice-scum", "p4": "scum"])
-        let winner: Player = "pz"
-        
-        XCTAssertThrows(try sut.sortByRoles(players: playersRoles, consideringWinner: winner), specificError: PlayersSorter.Error.givenWinnerNotPlaying)
+    func testSortByRolesConsideringWinner_withWinnerNotPlaying_justOrders() {
+        let playersRoles = usersFactory.make(["p2": "vice-president", "p3": "neutral", "p4": "vice-scum", "p5": "scum"])
+        let winner: Player = "p1"
+
+        let playersOrdered: [Player] = try! sut.sortByRoles(players: playersRoles, consideringWinner: winner)
+
+        XCTAssertEqual(playersOrdered, ["p2", "p3", "p4", "p5"])
     }
     
 }

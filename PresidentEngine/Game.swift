@@ -187,21 +187,15 @@ class PlayersSorter {
     
     func sortByRoles(players: [Player]) throws -> [Player] {
         try validate(players: players)
-
-        var players = players
-        for player in players {
-            let correctRoleIndex = player.role.rawValue
-            players[correctRoleIndex] = player
-        }
         
-        return players
+        return players.sorted { $0.role.rawValue < $1.role.rawValue }
     }
     
     func sortByRoles(players: [Player], consideringWinner winner: Player) throws -> [Player] {
         var players = try sortByRoles(players: players)
         
         guard let index = players.index(of: winner) else {
-            throw Error.givenWinnerNotPlaying
+            return players
         }
         
         let winner = players.remove(at: index)
@@ -214,15 +208,10 @@ class PlayersSorter {
         let roles = players.map { $0.role }
         
         let rulesValidator = RulesValidator()
-        try rulesValidator.validateThereAreExactlyFivePlayers(players: players)
         try rulesValidator.validateRolesAreUnique(roles: roles)
     }
     
     private class RulesValidator {
-        func validateThereAreExactlyFivePlayers(players: [Player]) throws {
-            guard players.count == 5 else { throw Error.invalidNumberPlayers }
-        }
-        
         func validateRolesAreUnique(roles: [Role]) throws {
             for role in roles {
                 guard (roles.filter { $0 == role }).count == 1 else {
@@ -235,7 +224,6 @@ class PlayersSorter {
     enum Error: Swift.Error {
         case invalidNumberPlayers
         case repeatedRoles
-        case givenWinnerNotPlaying
     }
 }
 
@@ -281,19 +269,21 @@ class RoundIterator {
 ///While TrickIterator tracks only Plays, this class handles Players as wells
 class OneTrickIterator {
     fileprivate var players: [Player]
+    fileprivate var originalPlayers: [Player]
     fileprivate var playsPlayers: [Play: Player] = [:]
 
     init(players: [Player]) {
         self.players = players
+        self.originalPlayers = players
     }
 
     ///Ask for each player for exactly one play and return the winner
-    func findWinner() throws -> Player {
+    func findWinner() throws -> (Player, [Player]) {
         var winner: Player!
         try TrickIterator(playOrderer: self).startTrick { (winningPlay) in
              winner = self.playsPlayers[winningPlay]
         }
-        return winner
+        return (winner, originalPlayers)
     }
 }
 
