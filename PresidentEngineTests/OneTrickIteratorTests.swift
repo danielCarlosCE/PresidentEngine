@@ -69,8 +69,8 @@ class OneTrickIteratorTests: XCTestCase {
     }
     
     class MockPlayerPlayOrderer: PlayerPlaysOrderer {
-        func nextPlay(forHand hand: [Card]) -> Range<Int> {
-            return hand.startIndex..<hand.endIndex
+        func nextPlay(forHand hand: [Card]) -> PlayerPlaysOrdererPlay {
+            return .go(hand.startIndex..<hand.endIndex)
         }
     }
 }

@@ -8,14 +8,15 @@
 
 import Foundation
 
-struct Play {
-    ///TODO: If the play is not `skip` the array can't be empty. Need to guaratee that somehow
-    let cards: [Card]
+enum Play {
+    //TODO: If the play is not `skip` the array can't be empty. Need to guaratee that somehow
+    case go([Card])
+    case skip
 }
 
 extension Play: ExpressibleByArrayLiteral {
     init(arrayLiteral elements: Card...) {
-        self.cards = elements
+        self = .go(elements)
     }
     
     typealias ArrayLiteralElement = Card
@@ -23,12 +24,24 @@ extension Play: ExpressibleByArrayLiteral {
 
 extension Play: Hashable {
     static func ==(lhs: Play, rhs: Play) -> Bool {
-        return lhs.cards == rhs.cards
+        switch (lhs, rhs) {
+        case (.skip, .skip): return true
+        case (.go(let cardslhs), .go(let cardsrhs)):
+            return cardslhs == cardsrhs
+        default: return false
+        }
+
     }
     var hashValue: Int {
-        return self.cards.map{$0.hashValue}.reduce(5381) {
-            ($0 << 5) &+ $0 &+ Int($1)
+        switch self {
+        case .go(let cards):
+            return cards.map{$0.hashValue}.reduce(5381) {
+                ($0 << 5) &+ $0 &+ Int($1)
+            }
+        case .skip:
+            return 0
         }
+
     }
 }
 
@@ -44,7 +57,7 @@ struct Player {
     var name: String
     var role: Role
     var hand: [Card] = []
-    var playerOrderer: PlayerPlayOrderer?
+    var playsOrderer: PlayerPlaysOrderer?
     
     init(name: String, role: Role) {
         self.name = name
@@ -52,20 +65,25 @@ struct Player {
     }
 }
 
-protocol PlayerPlayOrderer {
-    func nextPlay(forHand: [Card]) -> Range<Int>
+protocol PlayerPlaysOrderer {
+    func nextPlay(forHand: [Card]) -> PlayerPlaysOrdererPlay
+}
+
+enum PlayerPlaysOrdererPlay {
+    case go(Range<Int>)
+    case skip
 }
 
 extension Player {
-    ///TODO: this could not be nil, whether it's cards or skip, the Player needs to play
-    mutating func nextPlay() -> Play? {
-        if let playOrderer = playerOrderer {
-            let range = playOrderer.nextPlay(forHand: hand)
-            let play = Array(hand[range])
+    mutating func nextPlay() -> Play {
+        if let playOrderer = playsOrderer {
+            guard case let .go(range) = playOrderer.nextPlay(forHand: hand)  else { return .skip }
+
+            let cards = Array(hand[range])
             hand.removeSubrange(range)
-            return Play(cards: play)
+            return .go(cards)
         }
-        return nil
+        return .skip
     }
 }
 
@@ -122,51 +140,52 @@ class TrickIterator {
     ///it validates each play based on the rules
     ///once it hits the last play, it returns the winner on the @resultCallback closure
     func startTrick(resultCallback: (Play) -> Void) throws {
-        var currentPlay: Play?
+        var currentPlay: [Card]?
         
         while let nextPlay = playOrderer.nextPlay {
             try validate(nextPlay, forCurrentPlay: currentPlay)
-            currentPlay = nextPlay
+            if case let .go(cards) = nextPlay {
+                currentPlay = cards
+            }
         }
         
-        let ordererHasNoPlays = (currentPlay == nil)
-        if ordererHasNoPlays {
+        guard let ordererLastPlay = currentPlay else {
             throw Error.nonePlaysFromOrderer
         }
         
-        resultCallback(currentPlay!)
+        resultCallback(.go(ordererLastPlay))
     }
     
-    private func validate(_ nextPlay: Play, forCurrentPlay currentPlay: Play?) throws {
+    private func validate(_ nextPlay: Play, forCurrentPlay currentPlay: [Card]?) throws {
         let rulesValidator = RulesValidator()
-        
         try rulesValidator.validatePlayHasOnlyOneRank(play: nextPlay)
-        
-        if let currentPlay = currentPlay  {
-            try rulesValidator.validatePlayHasRightNumberCards(play: nextPlay, asCurrentPlay: currentPlay)
-            try rulesValidator.validatePlayHasGreaterRank(play: nextPlay, thanCurrentPlay: currentPlay)
-        }
+
+        guard let currentPlay = currentPlay else { return }
+        try rulesValidator.validatePlayHasRightNumberCards(play: nextPlay, asCurrentPlay: currentPlay)
+        try rulesValidator.validatePlayHasGreaterRank(play: nextPlay, thanCurrentPlay: currentPlay)
+
 
     }
     
     private class RulesValidator {
         func validatePlayHasOnlyOneRank(play: Play) throws {
-            guard let firstRank = play.cards.first?.rank else { return }
+            guard case let .go(cards) = play, let firstRank = cards.first?.rank else { return }
 
-            let ranks = play.cards.map{ $0.rank }
+            let ranks = cards.map{ $0.rank }
             try ranks.forEach { rank in
                 guard rank == firstRank else { throw Error.cardsDifferentRanks }
             }
         }
         
-        func validatePlayHasGreaterRank(play: Play, thanCurrentPlay currentPlay: Play) throws {
-            guard let playCardRank = play.cards.first, let currentPlayCardRank = currentPlay.cards.first else { return }
+        func validatePlayHasGreaterRank(play: Play, thanCurrentPlay currentPlay: [Card]) throws {
+            guard case let .go(cards) = play, let playCardRank = cards.first, let currentPlayCardRank = currentPlay.first else { return }
             
             guard playCardRank > currentPlayCardRank else { throw Error.lowerRank }
         }
         
-        func validatePlayHasRightNumberCards(play: Play, asCurrentPlay currentPlay: Play) throws {
-            let hasSameNumberCards = (play.cards.count == currentPlay.cards.count)
+        func validatePlayHasRightNumberCards(play: Play, asCurrentPlay currentPlay: [Card]) throws {
+            guard case let .go(cards) = play else { return }
+            let hasSameNumberCards = (cards.count == currentPlay.count)
             guard hasSameNumberCards else {
                 throw Error.invalidNumberCards
             }
@@ -292,8 +311,11 @@ extension OneTrickIterator: PlayOrderer {
         guard players.count > 0 else { return nil }
         var nextPlayer = players.removeFirst()
         
-        guard let play = nextPlayer.nextPlay() else { return nil }
+        let play = nextPlayer.nextPlay()
         playsPlayers[play] = nextPlayer
+
+        let index = originalPlayers.index(of: nextPlayer)!
+        originalPlayers[index] = nextPlayer
         
         return play
     }
