@@ -20,7 +20,7 @@ class PlayersSorterTests: XCTestCase {
     }
     
     func testSortByRoles_withUnorderedRoles_orders() {
-        let playersRoles = usersFactory.make(["p1": "vice-scum", "p2": "vice-president", "p3": "president", "p4": "scum", "p5": "neutral"])
+        let playersRoles = usersFactory.make([("p1", "vice-scum"), ("p2", "vice-president"), ("p3", "president"), ("p4", "scum"), ("p5", "neutral")])
         
         let playersOrdered:  [Player] = try! sut.sortByRoles(players: playersRoles)
         
@@ -28,7 +28,7 @@ class PlayersSorterTests: XCTestCase {
     }
     
     func testSortByRoles_withOrderedRoles_returnSame() {
-        let playersRoles = usersFactory.make(["p1": "president", "p2": "vice-president", "px": "neutral", "p3": "vice-scum", "p4": "scum"])
+        let playersRoles = usersFactory.make([("p1", "president"), ("p2", "vice-president"), ("px", "neutral"), ("p3", "vice-scum"), ("p4", "scum")])
         
         let playersOrdered: [Player] = try! sut.sortByRoles(players: playersRoles)
         
@@ -36,7 +36,7 @@ class PlayersSorterTests: XCTestCase {
     }
 
     func testSortByRoles_withLessThan5Players_orders() {
-        let playersRoles = usersFactory.make(["p1": "vice-scum", "p2": "vice-president", "p3": "president", "p4": "scum"])
+        let playersRoles = usersFactory.make([("p1", "vice-scum"), ("p2", "vice-president"), ("p3", "president"), ("p4", "scum")])
 
         let playersOrdered:  [Player] = try! sut.sortByRoles(players: playersRoles)
 
@@ -44,13 +44,13 @@ class PlayersSorterTests: XCTestCase {
     }
     
     func testSortByRoles_withRepeatedRoles_throwsError() {
-        let playersRoles = usersFactory.make(["p1": "president", "p2": "vice-president", "p3": "vice-scum", "p4": "scum", "p5": "president"])
+        let playersRoles = usersFactory.make([("p1", "president"), ("p2", "vice-president"), ("p3", "vice-scum"), ("p4", "scum"), ("p5", "president")])
         
         XCTAssertThrows(try sut.sortByRoles(players: playersRoles), specificError: PlayersSorter.Error.repeatedRoles)
     }
     
     func testSortByRolesConsideringWinner_withPresidentWinning_keepsSameOrder() {
-        let playersRoles = usersFactory.make(["p1": "president", "p2": "vice-president", "px": "neutral", "p3": "vice-scum", "p4": "scum"])
+        let playersRoles = usersFactory.make([("p1", "president"), ("p2", "vice-president"), ("px", "neutral"), ("p3", "vice-scum"), ("p4", "scum")])
         let winner: Player = "p1"
        
         let playersOrdered: [Player] = try! sut.sortByRoles(players: playersRoles, consideringWinner: winner)
@@ -59,7 +59,7 @@ class PlayersSorterTests: XCTestCase {
     }
     
     func testSortByRolesConsideringWinner_withViceWinning_changesOrder() {
-        let playersRoles = usersFactory.make(["p1": "president", "p2": "vice-president", "px": "neutral", "p3": "vice-scum", "p4": "scum"])
+        let playersRoles = usersFactory.make([("p1", "president"), ("p2", "vice-president"), ("px", "neutral"), ("p3", "vice-scum"), ("p4", "scum")])
         let winner: Player = "p2"
         
         let playersOrdered: [Player] = try! sut.sortByRoles(players: playersRoles, consideringWinner: winner)
@@ -68,7 +68,7 @@ class PlayersSorterTests: XCTestCase {
     }
     
     func testSortByRolesConsideringWinner_withScrumWinning_changesOrder() {
-        let playersRoles = usersFactory.make(["p1": "president", "p2": "vice-president", "px": "neutral", "p3": "vice-scum", "p4": "scum"])
+        let playersRoles = usersFactory.make([("p1", "president"), ("p2", "vice-president"), ("px", "neutral"), ("p3", "vice-scum"), ("p4", "scum")])
         let winner: Player = "p4"
         
         let playersOrdered: [Player] = try! sut.sortByRoles(players: playersRoles, consideringWinner: winner)
@@ -77,7 +77,7 @@ class PlayersSorterTests: XCTestCase {
     }
     
     func testSortByRolesConsideringWinner_withWinnerNotPlaying_justOrders() {
-        let playersRoles = usersFactory.make(["p2": "vice-president", "p3": "neutral", "p4": "vice-scum", "p5": "scum"])
+        let playersRoles = usersFactory.make([("p2", "vice-president"), ("p3", "neutral"), ("p4", "vice-scum"), ("p5", "scum")])
         let winner: Player = "p1"
 
         let playersOrdered: [Player] = try! sut.sortByRoles(players: playersRoles, consideringWinner: winner)

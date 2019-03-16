@@ -13,12 +13,12 @@ class PlayersFactory {
     typealias PlayerName = String
     typealias RoleValue = String
 
-    ///make(["p1": "president", "p2": "vice-president", "px": "neutral", "p3": "vice-scum", "p4": "scum"])
-    static func make(_ playersRoles: [PlayerName: RoleValue]) -> [Player] {
-        return playersRoles.map { return Player(name: $0.key, role: .init(stringLiteral: $0.value)) }
+    ///make([("p1", "president"), ("p2", "vice-president"), ("px", "neutral"), ("p3", "vice-scum"), ("p4", "scum")])
+    static func make(_ playersRoles: [(PlayerName, RoleValue)]) -> [Player] {
+        return playersRoles.map { return Player(name: $0.0, role: .init(stringLiteral: $0.1)) }
     }
 
-    static func make(_ playersRoles: [PlayerName: RoleValue], withHands hands: [[Card]]) -> [Player] {
+    static func make(_ playersRoles:[(PlayerName, RoleValue)], withHands hands: [[Card]]) -> [Player] {
         return make(playersRoles).enumerated().map {
             var player = $0.element
             player.hand = hands[$0.offset]
