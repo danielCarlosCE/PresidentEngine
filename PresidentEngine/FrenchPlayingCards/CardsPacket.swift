@@ -9,8 +9,8 @@
 struct CardsPacket {
     let cards: [Card]
     init() {
-        let suits = Card.Suit.allValues
-        let ranks = Card.Rank.allValues
+        let suits = Card.Suit.allCases
+        let ranks = Card.Rank.allCases
         
         self.cards = ranks.flatMap { rank in
             suits.map { Card(rank: rank, suit: $0)}

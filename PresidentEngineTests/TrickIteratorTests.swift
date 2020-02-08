@@ -70,18 +70,16 @@ class TrickIteratorTests: XCTestCase {
         
         XCTAssertThrows(try sut.startTrick {_ in }, specificError: TrickIterator.Error.cardsDifferentRanks)
     }
-    
-    //MARK: private
-    
+
+}
+
+extension TrickIteratorTests {
     private func makeSut(forPlays plays: [Play]) -> TrickIterator {
         let mockPlayOrderer = MockPlayOrderer(plays: plays)
         return TrickIterator(playOrderer: mockPlayOrderer)
     }
     
-    // Mark: Mocks
-    
     class MockPlayOrderer: PlayOrderer {
-        private var nextIndex = 0
         private var plays: [Play]
         
         init(plays: [Play]) {
@@ -89,11 +87,8 @@ class TrickIteratorTests: XCTestCase {
         }
         
         var nextPlay: Play? {
-            guard plays.count > nextIndex else { return nil }
-            let currentIndex = nextIndex
-            nextIndex += 1
-            return plays[currentIndex]
+            guard plays.count > 0 else { return nil }
+            return plays.removeFirst()
         }
     }
-
 }

@@ -22,7 +22,7 @@ class OneTrickIteratorTests: XCTestCase {
     func test_findWinner_withLasPlayFromPresident_returnsPresident() {
         players[0].hand = hands.first!
         players[0].playsOrderer = MockPlayerPlayOrderer()
-        let sut = OneTrickIterator(players: players)
+        let sut = OnePlayPerPlayerTrickIterator(players: players)
         
         let winner = try! sut.findWinner().0
         
@@ -34,7 +34,7 @@ class OneTrickIteratorTests: XCTestCase {
         players[0].playsOrderer = MockPlayerPlayOrderer()
         players[1].hand = hands[1]
         players[1].playsOrderer = MockPlayerPlayOrderer()
-        let sut = OneTrickIterator(players: players)
+        let sut = OnePlayPerPlayerTrickIterator(players: players)
         
         let winner = try! sut.findWinner().0
         
@@ -46,7 +46,7 @@ class OneTrickIteratorTests: XCTestCase {
             players[index].hand = hands[index]
             players[index].playsOrderer = MockPlayerPlayOrderer()
         }
-        let sut = OneTrickIterator(players: players)
+        let sut = OnePlayPerPlayerTrickIterator(players: players)
         
         let winner = try! sut.findWinner().0
         
@@ -56,7 +56,7 @@ class OneTrickIteratorTests: XCTestCase {
     func test_findWinner_returnsPlayersSameOrderHandsUsed() {
         self.players[0].hand = hands.first!
         self.players[0].playsOrderer = MockPlayerPlayOrderer()
-        let sut = OneTrickIterator(players: self.players)
+        let sut = OnePlayPerPlayerTrickIterator(players: self.players)
 
         let (_, players): (Player, [Player]) = try! sut.findWinner()
 

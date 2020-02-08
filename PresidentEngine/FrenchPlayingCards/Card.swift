@@ -9,23 +9,24 @@
 struct Card {
     let rank: Rank
     let suit: Suit
-    enum Rank: Int {
+    
+    enum Rank: Int, CaseIterable {
         case aces = 1
         case two, three, four, five, six, seven, eight, nine, ten
         case jack, queen, king
-        
-        static var allValues: [Rank] {
-            return [.aces, .two, .three, .four, .five, .six, .seven, .eight, .nine, .ten, .jack, .queen, .king]
-        }
     }
-    enum Suit: String {
+    
+    enum Suit: String, CaseIterable {
         case spades   = "♠︎"
         case hearts   = "♥︎"
         case diamonds = "♦︎"
         case clubs    = "♣︎"
-        
-        static var allValues: [Suit] {
-            return [.spades, .hearts, .diamonds, .clubs]
-        }
+    }
+}
+
+extension Card: Hashable {
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(rank)
+        hasher.combine(suit)
     }
 }

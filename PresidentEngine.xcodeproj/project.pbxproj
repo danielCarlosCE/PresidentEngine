@@ -7,13 +7,24 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		3910189E23ED8944001623D0 /* Play.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3910189D23ED8944001623D0 /* Play.swift */; };
+		391018A023ED8967001623D0 /* Player.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3910189F23ED8967001623D0 /* Player.swift */; };
+		391018A223ED899E001623D0 /* Role.swift in Sources */ = {isa = PBXBuildFile; fileRef = 391018A123ED899E001623D0 /* Role.swift */; };
+		391018A423ED89CA001623D0 /* PlayerPlaysOrderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 391018A323ED89CA001623D0 /* PlayerPlaysOrderer.swift */; };
+		391018A723ED8AFE001623D0 /* Card+Value.swift in Sources */ = {isa = PBXBuildFile; fileRef = 391018A623ED8AFE001623D0 /* Card+Value.swift */; };
+		391018AA23ED8B2E001623D0 /* TrickIterator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 391018A923ED8B2E001623D0 /* TrickIterator.swift */; };
+		391018AC23ED8B89001623D0 /* PlayOrderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 391018AB23ED8B89001623D0 /* PlayOrderer.swift */; };
+		391018AF23ED8BD9001623D0 /* PlayersSorter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 391018AE23ED8BD9001623D0 /* PlayersSorter.swift */; };
+		391018B123ED8C12001623D0 /* Dealer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 391018B023ED8C12001623D0 /* Dealer.swift */; };
+		391018B323ED8C4E001623D0 /* RoundIterator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 391018B223ED8C4E001623D0 /* RoundIterator.swift */; };
+		391018B523ED8CC8001623D0 /* PlayersKeeper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 391018B423ED8CC8001623D0 /* PlayersKeeper.swift */; };
+		391018B723ED8D35001623D0 /* OnePlayPerPlayerTrickIterator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 391018B623ED8D35001623D0 /* OnePlayPerPlayerTrickIterator.swift */; };
 		9F9A1AB420364D83000A539F /* PlayersKeeperTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F9A1AB320364D83000A539F /* PlayersKeeperTests.swift */; };
 		9F9A1AB7203652B5000A539F /* Card+StringLiteral.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F9A1AB6203652B5000A539F /* Card+StringLiteral.swift */; };
 		9F9A1AB9203652FF000A539F /* PlayerRole+StringLiteral.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F9A1AB8203652FF000A539F /* PlayerRole+StringLiteral.swift */; };
 		9F9A1ABB20365360000A539F /* PlayersFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F9A1ABA20365360000A539F /* PlayersFactory.swift */; };
 		A43A7E961F48C1E1001187D8 /* PresidentEngine.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A43A7E8C1F48C1E1001187D8 /* PresidentEngine.framework */; };
 		A43A7EA71F48C212001187D8 /* TrickIteratorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A43A7EA61F48C212001187D8 /* TrickIteratorTests.swift */; };
-		A43A7EA91F48C36E001187D8 /* Game.swift in Sources */ = {isa = PBXBuildFile; fileRef = A43A7EA81F48C36E001187D8 /* Game.swift */; };
 		A44825C81F93859D0049DC40 /* RoundIteratorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A44825C71F93859D0049DC40 /* RoundIteratorTests.swift */; };
 		A4558C451F957B47004331EB /* Card.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4558C441F957B47004331EB /* Card.swift */; };
 		A4558C471F957BA6004331EB /* CardsPacket.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4558C461F957BA6004331EB /* CardsPacket.swift */; };
@@ -34,6 +45,18 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		3910189D23ED8944001623D0 /* Play.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Play.swift; sourceTree = "<group>"; };
+		3910189F23ED8967001623D0 /* Player.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Player.swift; sourceTree = "<group>"; };
+		391018A123ED899E001623D0 /* Role.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Role.swift; sourceTree = "<group>"; };
+		391018A323ED89CA001623D0 /* PlayerPlaysOrderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerPlaysOrderer.swift; sourceTree = "<group>"; };
+		391018A623ED8AFE001623D0 /* Card+Value.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Card+Value.swift"; sourceTree = "<group>"; };
+		391018A923ED8B2E001623D0 /* TrickIterator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrickIterator.swift; sourceTree = "<group>"; };
+		391018AB23ED8B89001623D0 /* PlayOrderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayOrderer.swift; sourceTree = "<group>"; };
+		391018AE23ED8BD9001623D0 /* PlayersSorter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayersSorter.swift; sourceTree = "<group>"; };
+		391018B023ED8C12001623D0 /* Dealer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Dealer.swift; sourceTree = "<group>"; };
+		391018B223ED8C4E001623D0 /* RoundIterator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoundIterator.swift; sourceTree = "<group>"; };
+		391018B423ED8CC8001623D0 /* PlayersKeeper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayersKeeper.swift; sourceTree = "<group>"; };
+		391018B623ED8D35001623D0 /* OnePlayPerPlayerTrickIterator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnePlayPerPlayerTrickIterator.swift; sourceTree = "<group>"; };
 		9F9A1AB320364D83000A539F /* PlayersKeeperTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayersKeeperTests.swift; sourceTree = "<group>"; };
 		9F9A1AB6203652B5000A539F /* Card+StringLiteral.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Card+StringLiteral.swift"; sourceTree = "<group>"; };
 		9F9A1AB8203652FF000A539F /* PlayerRole+StringLiteral.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PlayerRole+StringLiteral.swift"; sourceTree = "<group>"; };
@@ -43,7 +66,6 @@
 		A43A7E951F48C1E1001187D8 /* PresidentEngineTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PresidentEngineTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		A43A7E9C1F48C1E1001187D8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		A43A7EA61F48C212001187D8 /* TrickIteratorTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TrickIteratorTests.swift; sourceTree = "<group>"; };
-		A43A7EA81F48C36E001187D8 /* Game.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Game.swift; sourceTree = "<group>"; };
 		A44825C71F93859D0049DC40 /* RoundIteratorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoundIteratorTests.swift; sourceTree = "<group>"; };
 		A4558C441F957B47004331EB /* Card.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Card.swift; sourceTree = "<group>"; };
 		A4558C461F957BA6004331EB /* CardsPacket.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardsPacket.swift; sourceTree = "<group>"; };
@@ -72,6 +94,49 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		3910189C23ED8932001623D0 /* Game */ = {
+			isa = PBXGroup;
+			children = (
+				391018AD23ED8BCC001623D0 /* Round */,
+				391018A823ED8B25001623D0 /* Trick */,
+				391018A523ED8A0E001623D0 /* Model */,
+			);
+			path = Game;
+			sourceTree = "<group>";
+		};
+		391018A523ED8A0E001623D0 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				3910189D23ED8944001623D0 /* Play.swift */,
+				3910189F23ED8967001623D0 /* Player.swift */,
+				391018A323ED89CA001623D0 /* PlayerPlaysOrderer.swift */,
+				391018A123ED899E001623D0 /* Role.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		391018A823ED8B25001623D0 /* Trick */ = {
+			isa = PBXGroup;
+			children = (
+				391018A623ED8AFE001623D0 /* Card+Value.swift */,
+				391018A923ED8B2E001623D0 /* TrickIterator.swift */,
+				391018B623ED8D35001623D0 /* OnePlayPerPlayerTrickIterator.swift */,
+				391018AB23ED8B89001623D0 /* PlayOrderer.swift */,
+			);
+			path = Trick;
+			sourceTree = "<group>";
+		};
+		391018AD23ED8BCC001623D0 /* Round */ = {
+			isa = PBXGroup;
+			children = (
+				391018B223ED8C4E001623D0 /* RoundIterator.swift */,
+				391018B023ED8C12001623D0 /* Dealer.swift */,
+				391018AE23ED8BD9001623D0 /* PlayersSorter.swift */,
+				391018B423ED8CC8001623D0 /* PlayersKeeper.swift */,
+			);
+			path = Round;
+			sourceTree = "<group>";
+		};
 		9F9A1AB52036526D000A539F /* Support */ = {
 			isa = PBXGroup;
 			children = (
@@ -104,7 +169,7 @@
 			isa = PBXGroup;
 			children = (
 				A43A7E901F48C1E1001187D8 /* Info.plist */,
-				A43A7EA81F48C36E001187D8 /* Game.swift */,
+				3910189C23ED8932001623D0 /* Game */,
 				A4558C431F957B30004331EB /* FrenchPlayingCards */,
 			);
 			path = PresidentEngine;
@@ -199,27 +264,28 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 0830;
-				LastUpgradeCheck = 0900;
+				LastUpgradeCheck = 1130;
 				ORGANIZATIONNAME = danielcarlosce;
 				TargetAttributes = {
 					A43A7E8B1F48C1E1001187D8 = {
 						CreatedOnToolsVersion = 8.3.3;
-						LastSwiftMigration = 0900;
+						LastSwiftMigration = 1130;
 						ProvisioningStyle = Automatic;
 					};
 					A43A7E941F48C1E1001187D8 = {
 						CreatedOnToolsVersion = 8.3.3;
-						LastSwiftMigration = 0900;
+						LastSwiftMigration = 1130;
 						ProvisioningStyle = Automatic;
 					};
 				};
 			};
 			buildConfigurationList = A43A7E861F48C1E1001187D8 /* Build configuration list for PBXProject "PresidentEngine" */;
 			compatibilityVersion = "Xcode 3.2";
-			developmentRegion = English;
+			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				en,
+				Base,
 			);
 			mainGroup = A43A7E821F48C1E1001187D8;
 			productRefGroup = A43A7E8D1F48C1E1001187D8 /* Products */;
@@ -254,10 +320,21 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				391018B323ED8C4E001623D0 /* RoundIterator.swift in Sources */,
 				A4558C491F957BD4004331EB /* Deck.swift in Sources */,
-				A43A7EA91F48C36E001187D8 /* Game.swift in Sources */,
+				391018AC23ED8B89001623D0 /* PlayOrderer.swift in Sources */,
+				391018B123ED8C12001623D0 /* Dealer.swift in Sources */,
+				391018A223ED899E001623D0 /* Role.swift in Sources */,
 				A4558C451F957B47004331EB /* Card.swift in Sources */,
+				391018AF23ED8BD9001623D0 /* PlayersSorter.swift in Sources */,
+				391018A423ED89CA001623D0 /* PlayerPlaysOrderer.swift in Sources */,
+				391018B723ED8D35001623D0 /* OnePlayPerPlayerTrickIterator.swift in Sources */,
+				391018A723ED8AFE001623D0 /* Card+Value.swift in Sources */,
 				A4558C471F957BA6004331EB /* CardsPacket.swift in Sources */,
+				391018A023ED8967001623D0 /* Player.swift in Sources */,
+				3910189E23ED8944001623D0 /* Play.swift in Sources */,
+				391018B523ED8CC8001623D0 /* PlayersKeeper.swift in Sources */,
+				391018AA23ED8B2E001623D0 /* TrickIterator.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -292,6 +369,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
@@ -302,6 +380,7 @@
 				CLANG_WARN_BOOL_CONVERSION = YES;
 				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_EMPTY_BODY = YES;
@@ -309,6 +388,7 @@
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
@@ -351,6 +431,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
@@ -361,6 +442,7 @@
 				CLANG_WARN_BOOL_CONVERSION = YES;
 				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_EMPTY_BODY = YES;
@@ -368,6 +450,7 @@
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
@@ -417,7 +500,7 @@
 				SKIP_INSTALL = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_SWIFT3_OBJC_INFERENCE = Default;
-				SWIFT_VERSION = 3.0;
+				SWIFT_VERSION = 5.0;
 			};
 			name = Debug;
 		};
@@ -439,7 +522,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				SWIFT_SWIFT3_OBJC_INFERENCE = Default;
-				SWIFT_VERSION = 3.0;
+				SWIFT_VERSION = 5.0;
 			};
 			name = Release;
 		};
@@ -455,7 +538,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_SWIFT3_OBJC_INFERENCE = Default;
-				SWIFT_VERSION = 4.0;
+				SWIFT_VERSION = 5.0;
 			};
 			name = Debug;
 		};
@@ -470,7 +553,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.danielcarlosce.PresidentEngineTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_SWIFT3_OBJC_INFERENCE = Default;
-				SWIFT_VERSION = 4.0;
+				SWIFT_VERSION = 5.0;
 			};
 			name = Release;
 		};

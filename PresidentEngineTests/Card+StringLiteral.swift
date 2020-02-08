@@ -24,39 +24,42 @@ extension Card: ExpressibleByStringLiteral {
     private init(value: String) {
         //suit doesn't matter here
         let value = value.removingSuit()
-        self.suit = .clubs
+        let suit = Suit.clubs
+        var rank = Rank.aces
 
         switch value {
         case "A", "a":
-            self.rank = .aces
+            rank = .aces
         case "2":
-            self.rank = .two
+            rank = .two
         case "3":
-            self.rank = .three
+            rank = .three
         case "4":
-            self.rank = .four
+            rank = .four
         case "5":
-            self.rank = .five
+            rank = .five
         case "6":
-            self.rank = .six
+            rank = .six
         case "7":
-            self.rank = .seven
+            rank = .seven
         case "8":
-            self.rank = .eight
+            rank = .eight
         case "9":
-            self.rank = .nine
+            rank = .nine
         case "10":
-            self.rank = .ten
+            rank = .ten
         case "J", "j":
-            self.rank = .jack
+            rank = .jack
         case "Q", "q":
-            self.rank = .queen
+            rank = .queen
         case "K", "k":
-            self.rank = .king
-
+            rank = .king
+            
         default:
             fatalError("Unkown value for creating card: \(value)")
         }
+        
+        self.init(rank: rank, suit: suit)
     }
 
 }
